@@ -82,7 +82,7 @@ class FileEncodingTest extends TestCase
         $this->fileDriver
             ->method('fileOpen')
             ->willReturnCallback(
-                function($filePath, $mode) {
+                function ($filePath, $mode) {
                     return fopen($filePath, $mode);
                 }
             );
@@ -90,7 +90,7 @@ class FileEncodingTest extends TestCase
         $this->fileDriver
             ->method('fileClose')
             ->willReturnCallback(
-                function($file) {
+                function ($file) {
                     return fclose($file);
                 }
             );
@@ -98,7 +98,7 @@ class FileEncodingTest extends TestCase
         $this->fileDriver
             ->method('rename')
             ->willReturnCallback(
-                function($oldName, $newName) {
+                function ($oldName, $newName) {
                     return rename($oldName, $newName);
                 }
             );

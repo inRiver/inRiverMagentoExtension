@@ -153,7 +153,7 @@ class Configurable extends \Magento\ConfigurableImportExport\Model\Import\Produc
                     $quotedChildren = $this->connection->quoteInto('IN (?)', $deleteRelation);
                     $this->connection->delete(
                         $mainTable,
-                        "product_id {$quoted} AND attribute_id {$quotedChildren}"
+                        'product_id ' . $quoted . ' AND attribute_id ' . $quotedChildren
                     );
                 }
             }
@@ -186,7 +186,10 @@ class Configurable extends \Magento\ConfigurableImportExport\Model\Import\Produc
                 if (count($deleteRelation) > 0) {
                     $quoted = $this->connection->quoteInto('= ?', $parentId);
                     $quotedChildren = $this->connection->quoteInto('IN (?)', $deleteRelation);
-                    $this->connection->delete($linkTable, "parent_id {$quoted} AND product_id {$quotedChildren}");
+                    $this->connection->delete(
+                        $linkTable,
+                        'parent_id ' . $quoted . ' AND product_id ' . $quotedChildren
+                    );
                 }
             }
         }
@@ -218,7 +221,10 @@ class Configurable extends \Magento\ConfigurableImportExport\Model\Import\Produc
                 if (count($deleteRelation) > 0) {
                     $quoted = $this->connection->quoteInto('= ?', $parentId);
                     $quotedChildren = $this->connection->quoteInto('IN (?)', $deleteRelation);
-                    $this->connection->delete($relationTable, "parent_id {$quoted} AND child_id {$quotedChildren}");
+                    $this->connection->delete(
+                        $relationTable,
+                        'parent_id ' . $quoted . ' AND child_id ' . $quotedChildren
+                    );
                 }
             }
         }

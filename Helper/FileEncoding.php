@@ -13,6 +13,7 @@ namespace Inriver\Adapter\Helper;
 use Magento\Framework\Filesystem\Driver\File as FileDriver;
 
 use function file_get_contents;
+//phpcs:ignore Magento2.Exceptions.TryProcessSystemResources.MissingTryCatch
 use function stream_copy_to_stream;
 use function unlink;
 
