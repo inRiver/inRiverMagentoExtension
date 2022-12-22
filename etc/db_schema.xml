@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    InRiver <iif-magento@inriver.com>
+ * @copyright Copyright (c) InRiver (https://www.inriver.com/)
+ * @link      https://www.inriver.com/
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="inriver_importexport_importdata" resource="default" engine="innodb" comment="Import Data Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="entity" nullable="false" length="50" comment="Entity"/>
+        <column xsi:type="varchar" name="behavior" nullable="false" length="10" default="append" comment="Behavior"/>
+        <column xsi:type="longtext" name="data" nullable="true" comment="Data"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="inriver_async_callback" resource="default" engine="innodb"
+           comment="inRiver async callback url to return response to inRiver">
+        <column xsi:type="int" name="callback_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Callback Id"/>
+        <column xsi:type="int" name="number_of_operations" padding="10" unsigned="true" nullable="false" comment="Number of operation"/>
+        <column xsi:type="smallint" name="inriver_notified" padding="6" unsigned="false" nullable="false"
+                identity="false" default="0" comment="Inriver notified"/>
+        <column xsi:type="varbinary" name="bulk_uuid" nullable="false" length="39" comment="Related Bulk UUID"/>
+        <column xsi:type="varchar" name="topic" nullable="false" length="255" comment="Topic"/>
+        <constraint xsi:type="foreign" referenceId="INRIVER_ASYNC_CALLBACK_BULK_UUID_MAGENTO_BULK_UUID"
+                    table="inriver_async_callback" column="bulk_uuid" referenceTable="magento_bulk"
+                    referenceColumn="uuid" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="INRIVER_ASYNC_CALLBACK_BULK_UUID">
+            <column name="bulk_uuid"/>
+        </constraint>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="callback_id"/>
+        </constraint>
+        <column xsi:type="varchar" name="callback_url" nullable="true" comment="Callback Url"/>
+    </table>
+    <table name="inriver_async_callback_operation" resource="default" engine="innodb"
+           comment="inRiver async callback url operation to return response to inRiver">
+        <column xsi:type="int" name="callback_operation_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Callback operation Id"/>
+        <column xsi:type="int" name="callback_id" padding="10" unsigned="true" nullable="true" comment="Callback_Id"/>
+        <column xsi:type="int" name="error_count" padding="10" unsigned="true" nullable="false" comment="Number of errors"/>
+        <column xsi:type="longtext" name="messages" nullable="false" comment="Errors messages"/>
+        <column xsi:type="int" name="operation_id" padding="10" unsigned="true" nullable="true" comment="Operation ID"/>
+        <constraint xsi:type="foreign" referenceId="INRIVER_ASYNC_CALLBACK_OPERATION_ID_MAGENTO_OPERATION_ID"
+                    table="inriver_async_callback_operation" column="operation_id" referenceTable="magento_operation"
+                    referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="INRIVER_ASYNC_CALLBACK_OPERATION_ID">
+            <column name="operation_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="INRIVER_ASYNC_CALLBACK_OPERATION_ID_CALLBACK_ID"
+                    table="inriver_async_callback_operation" column="callback_id" referenceTable="inriver_async_callback"
+                    referenceColumn="callback_id" onDelete="CASCADE"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="callback_operation_id"/>
+        </constraint>
+    </table>
+    <table name="catalog_product_entity_media_gallery_value_inriver" resource="default" engine="innodb"
+           comment="InRiver Gallery Additional Attributes">
+        <column xsi:type="int" name="value_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Media Entity ID"/>
+        <column xsi:type="varchar" name="image_id" nullable="true" length="255" comment="inRiver image Id"/>
+        <constraint xsi:type="foreign" referenceId="FK_F3D3AC63793CC40C0AF6C908C44FD51F"
+                    table="catalog_product_entity_media_gallery_value_inriver" column="value_id"
+                    referenceTable="catalog_product_entity_media_gallery" referenceColumn="value_id"
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="CAT_PRD_ENTT_MDA_GLR_VAL_INRIVER_VAL_ID_IMAGE_ID">
+            <column name="value_id"/>
+            <column name="image_id"/>
+        </constraint>
+    </table>
+</schema>
