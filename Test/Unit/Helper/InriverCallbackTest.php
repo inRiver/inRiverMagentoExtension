@@ -367,7 +367,7 @@ class InriverCallbackTest extends TestCase
         $this->json = $this->createMock(Json::class);
         $this->json->method('serialize')->willReturn(self::MESSAGE_SERIALIZE);
         $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
-        $this->logger = $this->createMock(Logger::class);
+        $this->logger = $this->createMock(createMockLogger::class);
 
         $this->callback = $this->createMock(Callback::class);
 

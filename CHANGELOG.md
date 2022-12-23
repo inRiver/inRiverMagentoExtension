@@ -1,3 +1,7 @@
+##Version 24.3.1
+- Added support for text swatch
+- Added support for hexadecimal color in visual swatches
+
 ##Version 24.3.0
 - As an additional security layer, the configured inRiver API Key is now stored encrypted in the database in addition to being obscured in the admin panel.
 - WARNING: This introduces a breaking change in the configuration. You must re-enter the API Key in order to encrypt it, as the system now assumes an encrypted key.

@@ -16,8 +16,8 @@ use Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Model\Data\OptionsByAttribute\Option\Values;
 use Inriver\Adapter\Model\Operation\AttributeOptionsOperation;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\Eav\Api\AttributeRepositoryInterface;
-use Magento\Eav\Api\Data\AttributeInterface;
 use Magento\Eav\Api\Data\AttributeOptionInterface;
 use Magento\Eav\Api\Data\AttributeOptionInterfaceFactory;
 use Magento\Eav\Api\Data\AttributeOptionLabelInterface;
@@ -30,6 +30,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Swatches\Helper\Data;
 use PHPUnit\Framework\TestCase;
 
 class AttributeOptionsOperationTest extends TestCase
@@ -50,7 +51,7 @@ class AttributeOptionsOperationTest extends TestCase
     private $attributeOptionLabelFactory;
 
     /** @var \Magento\Store\Model\StoreManagerInterface|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
-    private $storeManger;
+    private $storeManager;
 
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $option;
@@ -60,6 +61,9 @@ class AttributeOptionsOperationTest extends TestCase
 
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $collectionFactory;
+
+    /** @var \Magento\Swatches\Helper\Data|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $swatchHelper;
 
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $collection;
@@ -71,13 +75,16 @@ class AttributeOptionsOperationTest extends TestCase
         $this->attributeOptionManagement = $this->createMock(OptionManagement::class);
         $this->attributeOptionFactory = $this->createMock(AttributeOptionInterfaceFactory::class);
         $this->attributeOptionLabelFactory = $this->createMock(AttributeOptionLabelInterfaceFactory::class);
-        $this->storeManger = $this->createMock(StoreManagerInterface::class);
+        $this->storeManager = $this->createMock(StoreManagerInterface::class);
         $this->option = $this->createMock(Option::class);
         $this->collectionFactory = $this->createMock(CollectionFactory::class);
+        $this->swatchHelper = $this->createMock(Data::class);
 
         $store = $this->createMock(StoreInterface::class);
         $store->method('getId')->willReturn(1);
-        $this->storeManger->method('getStore')->willReturn($store);
+        $this->storeManager->method('getStore')->willReturn($store);
+
+        $this->storeManager->method('getStores')->willReturn([$store]);
 
         $label = $this->createMock(AttributeOptionLabelInterface::class);
         $this->attributeOptionLabelFactory->method('create')->willReturn($label);
@@ -96,6 +103,9 @@ class AttributeOptionsOperationTest extends TestCase
         $this->collectionFactory
             ->method('create')
             ->willReturn($this->collection);
+
+        $this->swatchHelper->method('isSwatchAttribute')->willReturn(false);
+
     }
 
     public function testProcessEntityDoesNotExist(): void
@@ -131,7 +141,8 @@ class AttributeOptionsOperationTest extends TestCase
 
         $this->collection->method('getIterator')->willReturn(new ArrayIterator([]));
 
-        $attribute = $this->createMock(AttributeInterface::class);
+        $attribute = $this->createMock(Attribute::class);
+        $attribute->method('getAttributeCode')->willReturn('an_attribute_code');
 
         $this->attributeRepository->expects($this->once())->method('get')->willReturn($attribute);
 
@@ -156,7 +167,7 @@ class AttributeOptionsOperationTest extends TestCase
             ),
         ]);
 
-        $attribute = $this->createMock(AttributeInterface::class);
+        $attribute = $this->createMock(Attribute::class);
 
         $this->collection
             ->expects($this->once())
@@ -183,9 +194,10 @@ class AttributeOptionsOperationTest extends TestCase
             $this->attributeOptionManagement,
             $this->attributeOptionFactory,
             $this->attributeOptionLabelFactory,
-            $this->storeManger,
+            $this->storeManager,
             $this->option,
-            $this->collectionFactory
+            $this->collectionFactory,
+            $this->swatchHelper
         );
     }
 
