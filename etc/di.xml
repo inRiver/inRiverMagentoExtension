@@ -29,6 +29,9 @@
     <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface\AttributesInterface"
                 type="Inriver\Adapter\Model\Data\ProductImages\Images\Attributes"/>
 
+    <preference for="Inriver\Adapter\Api\CategoryManagementInterface"
+                type="Inriver\Adapter\Model\Operation\CategoryManagementOperation"/>
+
     <preference for="Inriver\Adapter\Api\ProductCategoriesInterface"
                 type="Inriver\Adapter\Model\Operation\ProductCategoriesOperation"/>
     <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface"
