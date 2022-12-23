@@ -67,7 +67,7 @@ class InriverRequest
     {
         $callbackUrl = $this->request->getHeader(self::CALLBACK_HEADER);
         $runtimeId = $this->request->getHeader(self::RUNTIME_ID_HEADER);
-        $this->logger->addInfo("this is the runtime id $runtimeId");
+        $this->logger->info("this is the runtime id $runtimeId");
         if ($callbackUrl && $bulkUuid !== '') {
             try {
                 $callback = $this->callbackRepository->getByBulkUuid($bulkUuid);

@@ -20,8 +20,8 @@ class CleanupCommand extends Command
     private Cleanup $cleanup;
 
     /**
-     * @param string|null $name
      * @param Cleanup $cleanup
+     * @param string|null $name
      */
     public function __construct(Cleanup $cleanup, string $name = null)
     {

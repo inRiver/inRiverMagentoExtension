@@ -87,11 +87,11 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     public function post(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array
     {
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Started Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
         $result =  $this->processProduct($productCategories->getSku(), $productCategories->getCategories());
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Finished  Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
         return $result;
@@ -109,11 +109,11 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     public function delete(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array
     {
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Started Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
         $result =  $this->deleteCategoryAssignement($productCategories->getSku(), $productCategories->getCategories());
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Finished  Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
         return $result;

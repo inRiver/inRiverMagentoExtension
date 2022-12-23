@@ -134,12 +134,12 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      */
     public function post(OptionsByAttributeInterface $optionsByAttribute): void
     {
-        $this->logger->addInfo(__('Starting Attribute options Operation'));
+        $this->logger->info(__('Starting Attribute options Operation'));
         foreach ($optionsByAttribute->getAttributes() as $attribute) {
-            $this->logger->addInfo(__('Importing options for Attributes: %1', $attribute));
+            $this->logger->info(__('Importing options for Attributes: %1', $attribute));
             $this->processAttribute($attribute, $optionsByAttribute->getOptions(), Product::ENTITY);
         }
-        $this->logger->addInfo(__('Finished Attribute options Operation'));
+        $this->logger->info(__('Finished Attribute options Operation'));
     }
 
     /**

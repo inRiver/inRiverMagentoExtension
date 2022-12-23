@@ -43,6 +43,9 @@ use function in_array;
 class Import implements ImportInterface
 {
     protected const ERROR_LOG_PREFIX = 'InRiver Import';
+    public const ARCHIVES_FOLDER = 'archives';
+    public const SUCCESS_FOLDER = 'success';
+    public const ERRORS_FOLDER = 'errors';
 
     /** @var \Inriver\Adapter\Logger\Logger */
     private $logger;
@@ -121,7 +124,7 @@ class Import implements ImportInterface
 
         if (!$this->validateFile($filename)) {
             $this->log('File validation failed', LogLevel::ERROR);
-            $this->moveFileAfterImport($filename, 'errors');
+            $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
             $this->eventManager->dispatch('inriver_treatment_import_validation_failure',
                 ['import' => $this, 'filename' => $filename]);
             return false;
@@ -144,10 +147,10 @@ class Import implements ImportInterface
                             . $error->getErrorDescription(), LogLevel::ERROR);
                     }
 
-                    $this->moveFileAfterImport($filename, 'error');
+                    $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
                 } else {
                     $this->log('The import was successful. ' . $this->getFormattedLogTrace());
-                    $this->moveFileAfterImport($filename, 'success');
+                    $this->moveFileAfterImport($filename, self::SUCCESS_FOLDER);
                     $this->eventManager->dispatch('inriver_treatment_after_import_success',
                         ['import' => $this, 'filename' => $filename]);
                 }
@@ -163,7 +166,7 @@ class Import implements ImportInterface
                         $error->getErrorDescription(), LogLevel::ERROR);
                 }
 
-                $this->moveFileAfterImport($filename, 'errors');
+                $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
                 $this->eventManager->dispatch('inriver_treatment_after_import_failure',
                     ['import' => $this, 'filename' => $filename]);
             }
@@ -173,7 +176,7 @@ class Import implements ImportInterface
             if (!$errors) {
                 $errors = $e->getMessage();
             }
-            $this->moveFileAfterImport($filename, 'errors');
+            $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
 
             $this->eventManager->dispatch('inriver_treatment_import_exception',
                 ['import' => $this, 'filename' => $filename, 'exception' => $e]);
@@ -187,7 +190,7 @@ class Import implements ImportInterface
             } else {
                 $errors .= "\n" . $e->getMessage();
             }
-            $this->moveFileAfterImport($filename, 'errors');
+            $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
 
             $this->eventManager->dispatch('inriver_treatment_after_import_failure',
                 ['import' => $this, 'filename' => $filename, 'exception' => $e]);
@@ -202,7 +205,7 @@ class Import implements ImportInterface
     protected function moveFileAfterImport(string $fileName, string $state)
     {
         $DS = DIRECTORY_SEPARATOR;
-        $aPath = "archives" . $DS . $state;
+        $aPath = self::ARCHIVES_FOLDER . $DS . $state;
 
         $pathinfo = $this->ioFile->getPathInfo($fileName);
         $absoluteNewPath = $pathinfo['dirname'] . $DS . $aPath . $DS . $pathinfo['basename'];
