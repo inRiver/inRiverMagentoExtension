@@ -1,3 +1,8 @@
+##Version 24.3.2
+- Fixed some exception handling
+- Added root exception message in some cascading exception
+
+
 ##Version 24.3.1
 - Added support for text swatch
 - Added support for hexadecimal color in visual swatches

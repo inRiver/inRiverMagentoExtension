@@ -1,7 +1,7 @@
 {
   "name": "inriver/magento-adapter",
   "description": "InRiver Adapter for Magento",
-  "version": "24.3.1",
+  "version": "24.3.2",
   "require": {
     "php": ">=7.2 <8.0.0",
     "magento/module-asynchronous-operations": ">=100.4"

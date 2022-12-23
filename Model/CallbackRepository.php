@@ -72,8 +72,8 @@ class CallbackRepository implements CallbackRepositoryInterface
             $this->callbackResource->save($callback);
         } catch (Throwable $e) {
             throw new CouldNotSaveException(
-                __('Could not save Callback'),
-                $e
+                __('Could not save Callback: %1', $e->getMessage()),
+                null
             );
         }
 
@@ -156,10 +156,11 @@ class CallbackRepository implements CallbackRepositoryInterface
         } catch (Throwable $e) {
             throw new LocalizedException(
                 __(
-                    'Cannot delete callback with id %1',
-                    $callback->getId()
+                    'Cannot delete callback with id %1: %2',
+                    $callback->getId(),
+                    $e->getMessage()
                 ),
-                $e
+                null
             );
         }
 
