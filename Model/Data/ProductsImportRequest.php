@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -25,6 +25,9 @@ class ProductsImportRequest implements ProductsImportRequestInterface
 {
     /** @var string */
     protected $url;
+
+    /** @var ?string[] */
+    protected $managedWebsite;
 
     /**
      * Url of the CSV file
@@ -66,5 +69,31 @@ class ProductsImportRequest implements ProductsImportRequestInterface
         }
 
         return $url;
+    }
+
+    /**
+     * List of website code managed by the current adapter
+     *
+     * @return string[]
+     */
+    public function getManagedWebsites(): ?array
+    {
+        return $this->managedWebsite;
+    }
+
+    /**
+     * Set the list of website code managed by the current adapter
+     *
+     * @param ?string[] $website
+     *
+     * @return \Inriver\Adapter\Api\Data\ProductsImportRequestInterface
+     */
+    public function setManagedWebsites(?array $website): ProductsImportRequestInterface
+    {
+        if($website !== null) {
+            $this->managedWebsite = $website;
+        }
+
+        return $this;
     }
 }

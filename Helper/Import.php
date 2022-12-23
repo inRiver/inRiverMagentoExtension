@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -82,7 +82,7 @@ class Import
         return isset($rowData[Product::COL_SKU], $rowData[Product::COL_TYPE])
             && !isset($rowData['price'])
             && array_key_exists(Product::COL_TYPE, $rowData)
-            && $rowData[Product::COL_TYPE] === Type::TYPE_SIMPLE
+            && ($rowData[Product::COL_TYPE] === Type::TYPE_SIMPLE || $rowData[Product::COL_TYPE] === Type::TYPE_VIRTUAL)
             && $this->isNewSku($rowData[Product::COL_SKU]);
     }
 

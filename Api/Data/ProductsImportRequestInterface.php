@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -30,4 +30,21 @@ interface ProductsImportRequestInterface
      * @return \Inriver\Adapter\Api\Data\ProductsImportRequestInterface
      */
     public function setUrl(string $url): ProductsImportRequestInterface;
+
+
+    /**
+     * List of website code managed by the current adapter
+     *
+     * @return string[]
+     */
+    public function getManagedWebsites(): ?array;
+
+    /**
+     * Set the list of website code managed by the current adapter
+     *
+     * @param ?string[] $website
+     *
+     * @return \Inriver\Adapter\Api\Data\ProductsImportRequestInterface
+     */
+    public function setManagedWebsites(?array $website): ProductsImportRequestInterface;
 }

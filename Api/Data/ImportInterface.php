@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -18,6 +18,7 @@ interface ImportInterface
     public const XML_INRIVER_IMPORT_PATH_CSV = 'inriver/import/path_csv';
     public const XML_INRIVER_IMPORT_PATH_BEHAVIOR = 'inriver/import/behavior';
     public const XML_INRIVER_IMPORT_PATH_DEBUG = 'inriver/import/debug';
+    public const XML_INRIVER_IMPORT_CLEANUP_DAYS = 'inriver/import/cleanup_days';
     public const XML_INRIVER_MAX_ALLOWED_ERROR = 'inriver/import/maximum_allowed_error';
 
     /**
@@ -50,4 +51,18 @@ interface ImportInterface
      * @return \Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingError[]
      */
     public function getErrors(): array;
+
+    /**
+     * Set the Managed websites by the adapter
+     *
+     * @param string $managedWebsites
+     */
+    public function setManagedWebsites(string $managedWebsites);
+
+    /**
+     * returns the Managed websites by the adapter
+     *
+     * @return string
+     */
+    public function getManagedWebsites(): string;
 }
