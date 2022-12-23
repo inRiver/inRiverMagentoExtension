@@ -25,4 +25,15 @@ interface ProductCategoriesInterface
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
     public function post(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array;
+
+    /**
+     * Import product categories
+     *
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories
+     *
+     * @return string[]
+     *
+     * @noinspection PhpFullyQualifiedNameUsageInspection
+     */
+    public function delete(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array;
 }
