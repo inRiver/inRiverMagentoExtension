@@ -1,3 +1,7 @@
+##Version 23.2.0
+- Better error message when an attribute option value is invalid.
+- Continue processing other option value if one is invalid
+
 ##Version 23.1.1
 - Fix inRiver Callback to handle exception in the additional message validation and send it back to inRiver
 - Fix code Magento Coding Standards
