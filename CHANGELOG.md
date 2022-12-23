@@ -1,3 +1,6 @@
+##Version 23.4.2
+- Fix an error with bulk processing when the bulk api call doesn't comes from inriver
+
 ##Version 23.4.1
 - Split category assignement into add and remove call to allow the option to skip category handling from inRiver in certain store
 
