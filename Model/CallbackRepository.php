@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -141,7 +141,9 @@ class CallbackRepository implements CallbackRepositoryInterface
             $this->bulkUuidToCallback[$bulkUuid] = $callback->getId();
         }
 
-        return $this->instances[$this->bulkUuidToCallback[$bulkUuid]];
+        return array_key_exists($this->bulkUuidToCallback[$bulkUuid], $this->instances) ?
+            $this->instances[$this->bulkUuidToCallback[$bulkUuid]] :
+            $this->get((int)$this->bulkUuidToCallback[$bulkUuid]);
     }
 
     /**

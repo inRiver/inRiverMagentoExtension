@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -29,8 +29,8 @@ class Import
     public const IS_INRIVER_IMPORT = 'is_inriver_import';
 
     public const LIST_OF_CHARACTER_TO_DECODE_AND_ENCODE_FOR_IMPORT = [
-        'search' => ['%3D', '%2C', '%22', '%7C', '%25'],
-        'replace' => ['=', ',', '"', '|', '%'],
+        'search' => ['%3D', '%2C', '%22', '%7C', '%25', '%0A', '%0D'],
+        'replace' => ['=', ',', '"', '|', '%', "\n", "\r"],
     ];
     public const ATTRIBUTES_TYPE_NOT_TO_DECODE_FOR_INSERT = [
         'datetime',
@@ -82,7 +82,7 @@ class Import
         return isset($rowData[Product::COL_SKU], $rowData[Product::COL_TYPE])
             && !isset($rowData['price'])
             && array_key_exists(Product::COL_TYPE, $rowData)
-            && $rowData[Product::COL_TYPE] === Type::TYPE_SIMPLE
+            && ($rowData[Product::COL_TYPE] === Type::TYPE_SIMPLE || $rowData[Product::COL_TYPE] === Type::TYPE_VIRTUAL)
             && $this->isNewSku($rowData[Product::COL_SKU]);
     }
 

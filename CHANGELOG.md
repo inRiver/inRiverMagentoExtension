@@ -1,11 +1,35 @@
-##Version 23.3.6
-- Added Archiving of imported file for product import
+##Version 23.4.6
+- Fix the constructor call
 
-##Version 23.3.5
-- Stale file handle fix.
+##Version 23.4.5
+- Fix the cleanup cron for "errors" folder
+
+##Version 23.4.4
+- Fix code to allow virtual product
+- Fix to product import to keep website associated to a product that is not managed by the adapter
+- Fix the email in the source code
+- Fix code to allow virtual product
+- Fix product import to allow websites not managed by the adapter
+- Added Archiving of imported file for product import
+- Added a new config: "Archive Lifetime in days" (default: 30)
+
+##Version 23.4.3
+- Fix an error with the implementation of endpoint products/import/relations
+- Fix the list of special characters according to the list in the inRiver adapter
+- Fix a type cast error when isDebug is set in the config
+
+##Version 23.4.2
+- Fix an error with bulk processing when the bulk api call doesn't comes from inriver
+
+##Version 23.4.1
+- Split category assignement into add and remove call to allow the option to skip category handling from inRiver in certain store
+
+##Version 23.4.0
+- Update images error messages to include file name and product sku
+- Adding new move category endpoint to have more control on error messages
 
 ##Version 23.3.4
-- Fixed a problem where product validation was not creating a unique url.
+- Fixed a problem where product validation was not creating a unique url. 
 
 ##Version 23.3.3
 - Forced the cleaning of the Product Repository cache in the Product Category Assignment operation to make sure it's loaded properly for editing

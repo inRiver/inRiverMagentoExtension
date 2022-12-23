@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -51,4 +51,18 @@ interface ImportInterface
      * @return \Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingError[]
      */
     public function getErrors(): array;
+
+    /**
+     * Set the Managed websites by the adapter
+     *
+     * @param string $managedWebsites
+     */
+    public function setManagedWebsites(string $managedWebsites);
+
+    /**
+     * returns the Managed websites by the adapter
+     *
+     * @return string
+     */
+    public function getManagedWebsites(): string;
 }

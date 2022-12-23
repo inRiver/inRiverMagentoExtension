@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  * This file applies minor modifications to native Magento code.
@@ -120,12 +120,15 @@ class Product extends ProductImport
                 foreach (array_keys($websiteData) as $sku) {
                     $delProductId[] = $this->skuProcessor->getNewSku($sku)['entity_id'];
                 }
+                $whereClause = $this->_connection->quoteInto('product_id IN (?)', $delProductId);
 
+                $parameters = $this->getParameters();
+
+                if (isset($parameters['managed_websites']) && $parameters['managed_websites'] !== '') {
+                    $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $parameters['managed_websites']);
+                }
                 if (count($delProductId) > 0) {
-                    $this->_connection->delete(
-                        $tableName,
-                        $this->_connection->quoteInto('product_id IN (?)', $delProductId)
-                    );
+                    $this->_connection->delete($tableName, $whereClause);
                 }
             }
         }
@@ -143,7 +146,7 @@ class Product extends ProductImport
         $debug = $this->scopeConfig->getValue(self::IS_DEBUG_MODE);
 
         if ($debug !== null) {
-            return $debug;
+            return (bool)$debug;
         }
 
         return $this->debug;

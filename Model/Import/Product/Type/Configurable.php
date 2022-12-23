@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  * This file applies minor modifications to native Magento code.
@@ -89,7 +89,11 @@ class Configurable extends \Magento\ConfigurableImportExport\Model\Import\Produc
                 $this->inriverImportHelper->decodeImportAttributeValue($option['_super_attribute_option']);
         }
 
-        $productId = $this->_productData[$this->getProductEntityLinkField()];
+        $productId = null;
+
+        if (isset($this->_productData[$this->getProductEntityLinkField()])) {
+            $productId = $this->_productData[$this->getProductEntityLinkField()];
+        }
 
         if ($productId !== null) {
             if (!isset($this->productSuperAttrIds[$productId])) {

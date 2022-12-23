@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @author    InRiver <iif-magento@inriver.com>
+ * @author    InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link      https://www.inriver.com/
  */
@@ -29,6 +29,9 @@
     <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface\AttributesInterface"
                 type="Inriver\Adapter\Model\Data\ProductImages\Images\Attributes"/>
 
+    <preference for="Inriver\Adapter\Api\CategoryManagementInterface"
+                type="Inriver\Adapter\Model\Operation\CategoryManagementOperation"/>
+
     <preference for="Inriver\Adapter\Api\ProductCategoriesInterface"
                 type="Inriver\Adapter\Model\Operation\ProductCategoriesOperation"/>
     <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface"
@@ -42,6 +45,9 @@
                 type="Inriver\Adapter\Model\Data\ProductsImportRequest"/>
     <preference for="Magento\ImportExport\Model\Import"
                 type="Inriver\Adapter\Model\ImportExport\Import" />
+
+    <preference for="Inriver\Adapter\Api\ProductsImportRelationsInterface"
+                type="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation"/>
 
     <preference for="Inriver\Adapter\Api\ProductAttributeOptionsInterface"
                 type="Inriver\Adapter\Model\Operation\AttributeOptionsOperation"/>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -71,6 +71,9 @@ class Import implements ImportInterface
 
     /** @var \Inriver\Adapter\Api\Data\OperationResultInterfaceFactory */
     private $operationResultFactory;
+
+    /** @var string */
+    private $managedWebsites;
 
     /** @var \Magento\Framework\Filesystem\Directory\WriteInterface */
     protected $directory;
@@ -287,10 +290,9 @@ class Import implements ImportInterface
                 [
                     'entity' => InriverImportHelper::INRIVER_ENTITY,
                     'is_inriver' => true,
-                    MagentoImport::FIELD_NAME_VALIDATION_STRATEGY =>
-                        ProcessingErrorAggregatorInterface::VALIDATION_STRATEGY_SKIP_ERRORS,
-                    MagentoImport::FIELD_NAME_ALLOWED_ERROR_COUNT =>
-                        $this->scopeConfig->getValue(self::XML_INRIVER_MAX_ALLOWED_ERROR)
+                    MagentoImport::FIELD_NAME_VALIDATION_STRATEGY => ProcessingErrorAggregatorInterface::VALIDATION_STRATEGY_SKIP_ERRORS,
+                    MagentoImport::FIELD_NAME_ALLOWED_ERROR_COUNT => $this->scopeConfig->getValue(self::XML_INRIVER_MAX_ALLOWED_ERROR),
+                    'managed_websites' => $this->getManagedWebsites()
                 ]
             );
             $this->setImportBehavior();
@@ -370,5 +372,25 @@ class Import implements ImportInterface
 
             return false;
         }
+    }
+
+    /**
+     * Set the Managed websites by the adapter
+     *
+     * @param string $managedWebsites
+     */
+    public function setManagedWebsites(string $managedWebsites)
+    {
+        $this->managedWebsites = $managedWebsites;
+    }
+
+    /**
+     * returns the Managed websites by the adapter
+     *
+     * @return string
+     */
+    public function getManagedWebsites(): string
+    {
+        return $this->managedWebsites;
     }
 }

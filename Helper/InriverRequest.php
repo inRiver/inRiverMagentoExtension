@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -12,6 +12,7 @@ namespace Inriver\Adapter\Helper;
 
 use Inriver\Adapter\Api\CallbackRepositoryInterface;
 use Inriver\Adapter\Api\Data\CallbackInterfaceFactory;
+use Inriver\Adapter\Logger\Logger;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Rest\Request;
 
@@ -21,6 +22,7 @@ use Magento\Framework\Webapi\Rest\Request;
 class InriverRequest
 {
     public const CALLBACK_HEADER = 'x-inriver-callback';
+    public const RUNTIME_ID_HEADER = 'x-inriver-runtime-id';
 
     /** @var \Inriver\Adapter\Api\CallbackRepositoryInterface */
     private $callbackRepository;
@@ -31,6 +33,9 @@ class InriverRequest
     /** @var \Magento\Framework\Webapi\Rest\Request */
     private $request;
 
+    /** @var Logger */
+    private $logger;
+
     /**
      * @param \Inriver\Adapter\Api\CallbackRepositoryInterface $callbackRepository
      * @param \Inriver\Adapter\Api\Data\CallbackInterfaceFactory $callbackFactory
@@ -39,11 +44,13 @@ class InriverRequest
     public function __construct(
         CallbackRepositoryInterface $callbackRepository,
         CallbackInterfaceFactory $callbackFactory,
-        Request $request
+        Request $request,
+        Logger $logger
     ) {
         $this->callbackRepository = $callbackRepository;
         $this->callbackFactory = $callbackFactory;
         $this->request = $request;
+        $this->logger = $logger;
     }
 
     /**
@@ -59,6 +66,9 @@ class InriverRequest
     {
         $callbackUrl = $this->request->getHeader(self::CALLBACK_HEADER);
 
+        $runtimeId = $this->request->getHeader(self::RUNTIME_ID_HEADER);
+        $this->logger->info("this is the runtime id $runtimeId");
+
         if ($callbackUrl && $bulkUuid !== '') {
             try {
                 $callback = $this->callbackRepository->getByBulkUuid($bulkUuid);
@@ -66,6 +76,8 @@ class InriverRequest
                 $callback = $this->callbackFactory->create();
                 $callback->setBulkUuid($bulkUuid);
                 $callback->setCallbackUrl($callbackUrl);
+                //set runtimeId here instead of log
+                //$callback->setRuntimeId($runtimeId);
                 $callback->setTopic($topic);
             }
 

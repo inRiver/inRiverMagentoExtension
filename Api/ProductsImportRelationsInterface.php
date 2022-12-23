@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace Inriver\Adapter\Api;
 
 /**
- * Interface ProductAttributeOptionsInterface
+ * Interface ProductsImportRelationsInterface
  */
-interface ProductAttributeOptionsInterface extends AttributeOptionsInterface
+interface ProductsImportRelationsInterface extends ProductsImportInterface
 {
 }
