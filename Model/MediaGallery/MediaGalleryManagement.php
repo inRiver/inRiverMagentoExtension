@@ -204,7 +204,7 @@ class MediaGalleryManagement
 
         $select = $connection
             ->select()
-            ->from($connection->getTableName('catalog_product_entity_media_gallery_value'), 'record_id')
+            ->from($connection->getTableName('catalog_product_entity_media_gallery_value'), 'store_id')
             ->where('store_id NOT IN(?)', $excludedStores)
             ->where($this->metadata->getLinkField() . ' = ?', (int) $product->getData($this->metadata->getLinkField()))
             ->where('value_id = ?', $entry->getId());

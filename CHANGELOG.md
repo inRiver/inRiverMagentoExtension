@@ -1,3 +1,6 @@
+##Version 23.5.3
+- Fix image roles
+
 ##Version 23.5.2
 - Fix the constructor call
 
