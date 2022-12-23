@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    InRiver <iif-magento@inriver.com>
+ * @copyright Copyright (c) InRiver (https://www.inriver.com/)
+ * @link      https://www.inriver.com/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Inriver_Adapter::all" title="InRiver Adapter" translate="title">
+                    <resource id="Inriver_Adapter::read" title="Read" translate="title"/>
+                    <resource id="Inriver_Adapter::write" title="Write" translate="title"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
