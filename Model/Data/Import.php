@@ -241,6 +241,8 @@ class Import implements ImportInterface
                     'is_inriver' => true,
                     MagentoImport::FIELD_NAME_VALIDATION_STRATEGY =>
                         ProcessingErrorAggregatorInterface::VALIDATION_STRATEGY_SKIP_ERRORS,
+                    MagentoImport::FIELD_NAME_ALLOWED_ERROR_COUNT =>
+                        $this->scopeConfig->getValue(self::XML_INRIVER_MAX_ALLOWED_ERROR)
                 ]
             );
             $this->setImportBehavior();
