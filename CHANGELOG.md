@@ -1,3 +1,6 @@
+##Version 24.6.0
+- Added new endpoint for the 1.8.0 version of the inRiver Adapter
+ 
 ##Version 24.5.0
 - Adaptation to the code to work on Magento 2.4.4 version
 

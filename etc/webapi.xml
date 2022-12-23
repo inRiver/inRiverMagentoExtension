@@ -20,6 +20,12 @@
             <resource ref="Inriver_Adapter::read"/>
         </resources>
     </route>
+    <route method="GET" url="/V1/inriver-adapter/attribute-list">
+        <service class="Inriver\Adapter\Api\AttributeInterface" method="get"/>
+        <resources>
+            <resource ref="Inriver_Adapter::read"/>
+        </resources>
+    </route>
     <route method="GET" url="/V1/inriver-adapter/error-codes">
         <service class="Inriver\Adapter\Api\ErrorCodesInterface" method="get"/>
         <resources>
