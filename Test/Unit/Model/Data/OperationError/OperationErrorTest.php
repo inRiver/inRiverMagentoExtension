@@ -26,7 +26,7 @@ class OperationErrorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->testClass = new class extends OperationError {
+        $this->testClass = new class() extends OperationError {
             public function getCode(): int
             {
                 return OperationErrorTest::ERROR_CODE;

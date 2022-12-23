@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 
 class ErrorCodesTest extends TestCase
 {
-
     private const ERROR_CODE = 1000;
     private const ERROR_DESCRIPTION = 'Error description';
 

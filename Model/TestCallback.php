@@ -13,9 +13,7 @@ namespace Inriver\Adapter\Model;
 use Inriver\Adapter\Api\Data\ValidationMessageInterface;
 use Inriver\Adapter\Api\TestCallbackInterface;
 use Inriver\Adapter\Helper\InriverCallback;
-use Inriver\Adapter\Helper\InriverRequest;
 use Magento\Framework\Stdlib\DateTime\DateTime;
-use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 
 class TestCallback implements TestCallbackInterface
@@ -59,7 +57,7 @@ class TestCallback implements TestCallbackInterface
      */
     public function get(string $validationToken): ValidationMessageInterface
     {
-        $callbackUrl = $this->request->getHeader(InriverRequest::CALLBACK_HEADER);
+        $callbackUrl = $this->request->getHeader(InriverCallback::CALLBACK_HEADER);
         $response = $this->inriverCallback->sendResponse(
             $this->inriverCallback->getApiKey(),
             $callbackUrl,

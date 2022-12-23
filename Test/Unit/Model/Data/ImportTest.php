@@ -16,7 +16,9 @@ use Inriver\Adapter\Model\Data\Import;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Manager;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadFactory;
+use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\ImportExport\Model\Import\Source\CsvFactory;
@@ -51,9 +53,17 @@ class ImportTest extends TestCase
     /** @var \Inriver\Adapter\Api\Data\OperationResultInterfaceFactory|\Inriver\Adapter\Test\Unit\Model\Data\MockObject */
     private $operationResultFactory;
 
+    /** @var \Magento\Framework\Filesystem|\Inriver\Adapter\Test\Unit\Model\Data\MockObject */
+    protected $fs;
+
     public function testFileDoesNotExist(): void
     {
         $this->ioFile->method('fileExists')->willReturn(false);
+        $this->ioFile->method('getPathInfo')->willReturn([
+            'basename' => '',
+            'dirname' => '',
+        ]);
+
         $import = $this->createImportMock();
         $this->assertFalse($import->execute('NON_EXISTING_FILENAME'));
     }
@@ -77,6 +87,7 @@ class ImportTest extends TestCase
 
         $import = $this->createImportMock();
 
+        $import->setManagedWebsites('');
         $this->assertFalse($import->execute('FILENAME'));
 
         $importExportMock->method('validateSource')->willThrowException(new LocalizedException(__('')));
@@ -110,6 +121,9 @@ class ImportTest extends TestCase
         $this->ioFile = $this->createMock(File::class);
         $this->eventManager = $this->createMock(Manager::class);
         $this->operationResultFactory = $this->createMock(OperationResultInterfaceFactory::class);
+        $directory = $this->createMock(WriteInterface::class);
+        $this->fs = $this->createMock(Filesystem::class);
+        $this->fs->method('getDirectoryWrite')->willReturn($directory);
     }
 
     private function createImportMock(): Import
@@ -122,7 +136,8 @@ class ImportTest extends TestCase
             $this->scopeConfig,
             $this->ioFile,
             $this->eventManager,
-            $this->operationResultFactory
+            $this->operationResultFactory,
+            $this->fs
         );
     }
 }

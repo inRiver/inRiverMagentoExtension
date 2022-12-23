@@ -182,16 +182,15 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
                     $this->updateOption($attribute, $currentOption, $updatedOption);
                     unset($newOptionList[$currentOption->getValue()]);
                 } catch (InputException $exception) {
-                        $attributeOptionErrors[] = __(
-                            'An error occured while importing value(' .
+                    $attributeOptionErrors[] = __(
+                        'An error occured while importing value(' .
                             $updatedOption->getAdminValue() .
                             ') for attribute(' .
-                            $attribute->getAttributeCode() .'): ' .
+                            $attribute->getAttributeCode() . '): ' .
                             $exception->getMessage()
-                        );
+                    );
                 }
             }
-
         }
 
         // Create remaining options
@@ -203,7 +202,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
                     'An error occured while importing value(' .
                     $newOption->getAdminValue() .
                     ') for attribute(' .
-                    $attribute->getAttributeCode() .'): ' .
+                    $attribute->getAttributeCode() . '): ' .
                     $exception->getMessage()
                 );
             }
@@ -259,7 +258,6 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      */
     protected function createOption(AttributeInterface $attribute, OptionInterface $newOption): void
     {
-
         $isSwatch = $this->swatchHelper->isSwatchAttribute($attribute);
         $labels = $this->getStoreLabels($newOption, $isSwatch);
 
@@ -297,7 +295,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         AttributeOption $currentOption = null,
         AttributeInterface $attribute = null
     ): array {
-        $originalStoreId = $attribute !== null ?  $attribute->getStoreId() : 0;
+        $originalStoreId = $attribute !== null ? $attribute->getStoreId() : 0;
         $labels = [];
         foreach ($newOption->getValues() as $value) {
             $storeId = $this->storeManager->getStore($value->getStoreViewCode())->getId();

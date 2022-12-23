@@ -14,6 +14,7 @@ use ArrayIterator;
 use Inriver\Adapter\Api\Data\OptionsByAttributeInterface;
 use Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
+use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Model\Data\OptionsByAttribute\Option\Values;
 use Inriver\Adapter\Model\Operation\AttributeOptionsOperation;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
@@ -68,6 +69,9 @@ class AttributeOptionsOperationTest extends TestCase
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $collection;
 
+    /** @var \Inriver\Adapter\Logger\Logger|\Inriver\Adapter\Test\Unit\Model\Data\MockObject */
+    private $logger;
+
     public function setUp(): void
     {
         $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
@@ -106,6 +110,7 @@ class AttributeOptionsOperationTest extends TestCase
 
         $this->swatchHelper->method('isSwatchAttribute')->willReturn(false);
 
+        $this->logger = $this->createMock(Logger::class);
     }
 
     public function testProcessEntityDoesNotExist(): void
@@ -197,7 +202,8 @@ class AttributeOptionsOperationTest extends TestCase
             $this->storeManager,
             $this->option,
             $this->collectionFactory,
-            $this->swatchHelper
+            $this->swatchHelper,
+            $this->logger
         );
     }
 

@@ -16,8 +16,8 @@ use Inriver\Adapter\Helper\Import as InriverImportHelper;
 use Inriver\Adapter\Model\Import\Product as InriverProductImport;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\ImportExport\Model\Import as ParentImport;
 use Magento\ImportExport\Model\Import\AbstractEntity as ImportAbstractEntity;
+use Magento\ImportExport\Model\Import as ParentImport;
 use Magento\ImportExport\Model\Import\Entity\AbstractEntity;
 use Throwable;
 

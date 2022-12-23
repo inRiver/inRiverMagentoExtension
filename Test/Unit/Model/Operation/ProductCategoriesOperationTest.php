@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Test\Unit\Model\Operation;
 
+use Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterfaceFactory;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
+use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Model\Data\ProductCategories;
 use Inriver\Adapter\Model\Data\ProductCategories\Category as DataCategory;
 use Inriver\Adapter\Model\Operation\ProductCategoriesOperation;
@@ -25,6 +27,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\ResourceModel\Category\Collection;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
+use Magento\CatalogInventory\Model\StockRegistryStorage;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit\Framework\TestCase;
@@ -59,8 +62,17 @@ class ProductCategoriesOperationTest extends TestCase
     /** @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory */
     private $categoryCollectionFactory;
 
+    /** @var \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterfaceFactory|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $inriverCategoryFactory;
+
     /** @var \Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory */
     private $categoryLinkInterfaceFactory;
+
+    /** @var \Magento\CatalogInventory\Model\StockRegistryStorage|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $stockRegistryStorage;
+
+    /** @var \Inriver\Adapter\Logger\Logger|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $logger;
 
     public function testAllNoPostion(): void
     {
@@ -207,6 +219,7 @@ class ProductCategoriesOperationTest extends TestCase
     {
         $this->productRepositoryFactory = $this->createMock(ProductRepositoryInterfaceFactory::class);
         $this->categoryCollectionFactory = $this->createMock(CollectionFactory::class);
+        $this->inriverCategoryFactory = $this->createMock(CategoryInterfaceFactory::class);
         $this->categoryLinkInterfaceFactory = $this->createMock(CategoryLinkInterfaceFactory::class);
         $this->product = $this->createMock(Product::class);
         $this->productRepository = $this->createMock(ProductRepository::class);
@@ -214,6 +227,8 @@ class ProductCategoriesOperationTest extends TestCase
             ProductExtension::class,
             ['getCategoryLinks', 'setCategoryLinks']
         );
+        $this->stockRegistryStorage = $this->createMock(StockRegistryStorage::class);
+        $this->logger = $this->createMock(Logger::class);
     }
 
     private function getSubject(): ProductCategoriesOperation
@@ -221,7 +236,10 @@ class ProductCategoriesOperationTest extends TestCase
         return new ProductCategoriesOperation(
             $this->productRepositoryFactory,
             $this->categoryCollectionFactory,
-            $this->categoryLinkInterfaceFactory
+            $this->inriverCategoryFactory,
+            $this->categoryLinkInterfaceFactory,
+            $this->stockRegistryStorage,
+            $this->logger
         );
     }
 

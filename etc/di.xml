@@ -71,9 +71,6 @@
     <preference for="Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface"
                 type="Inriver\Adapter\Model\InriverMediaGalleryDataRepository"/>
 
-    <preference for="Magento\AsynchronousOperations\Model\MassSchedule"
-                type="Inriver\Adapter\Model\MassSchedule"/>
-
     <preference for="Inriver\Adapter\Api\Data\OperationResultInterface"
                 type="Inriver\Adapter\Model\Data\OperationResult"/>
 
@@ -113,10 +110,6 @@
         <plugin name="inriver_import_product_type_abstract_plugin" type="Inriver\Adapter\Plugin\InriverProductImportTypeAbstractPlugin"/>
     </type>
 
-    <type name="Magento\AsynchronousOperations\Model\BulkManagement">
-        <plugin name="receive_callback_url" type="Inriver\Adapter\Plugin\ReceiveCallbackUrlPlugin"/>
-    </type>
-
     <type name="Magento\AsynchronousOperations\Model\OperationManagement">
         <plugin name="inriver_add_callback_logic" type="Inriver\Adapter\Plugin\AddCallbackLogicPlugin"/>
     </type>
@@ -136,9 +129,9 @@
         </arguments>
     </type>
 
-    <type name="Magento\AsynchronousOperations\Model\BulkManagement">
-        <plugin name="BulkManagementPlugin"
-                type="Inriver\Adapter\Plugin\BulkManagementPlugin" sortOrder="10"/>
+    <type name="Magento\AsynchronousOperations\Model\MassSchedule">
+        <plugin name="MassSchedulePlugin"
+                type="Inriver\Adapter\Plugin\MassSchedulePlugin" sortOrder="10"/>
     </type>
     <virtualType name="Inriver\Adapter\Model\Import\Product\Type\Grouped" type="Magento\GroupedImportExport\Model\Import\Product\Type\Grouped">
         <arguments>

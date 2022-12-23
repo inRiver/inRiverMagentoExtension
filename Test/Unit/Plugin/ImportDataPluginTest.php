@@ -14,11 +14,11 @@ use Inriver\Adapter\Exception\EmptyImportException;
 use Inriver\Adapter\Helper\Import;
 use Inriver\Adapter\Model\ResourceModel\Import\Data;
 use Inriver\Adapter\Plugin\ImportDataPlugin;
+use Inriver\Adapter\Test\Unit\includes\MockInvokable;
 use Magento\Catalog\Model\Product\Type;
 use Magento\CatalogImportExport\Model\Import\Product;
 use Magento\Framework\Exception\LocalizedException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 use function __;
 use function count;
@@ -195,7 +195,7 @@ class ImportDataPluginTest extends TestCase
                     'getUniqueProductUrl',
                 ]
             );
-        $this->proceed = $this->createPartialMock(stdClass::class, ['__invoke']);
+        $this->proceed = $this->createPartialMock(MockInvokable::class, ['__invoke']);
     }
 
     /**

@@ -46,5 +46,4 @@ interface ProductsImportRequestInterface
      * @return \Inriver\Adapter\Api\Data\ProductsImportRequestInterface
      */
     public function setManagedWebsites(?array $website): ProductsImportRequestInterface;
-
 }

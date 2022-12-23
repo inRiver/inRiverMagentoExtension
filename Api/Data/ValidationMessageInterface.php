@@ -28,7 +28,6 @@ interface ValidationMessageInterface
      */
     public function getMessage(): string;
 
-
     /**
      * @param bool $value
      * @return void

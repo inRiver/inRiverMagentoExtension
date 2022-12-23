@@ -1,3 +1,6 @@
+##Version 24.5.0
+- Adaptation to the code to work on Magento 2.4.4 version
+
 ##Version 24.4.5
 - Fix the cleanup cron for "errors" folder
 

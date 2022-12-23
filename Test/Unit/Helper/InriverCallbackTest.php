@@ -35,6 +35,7 @@ class InriverCallbackTest extends TestCase
     private const ERROR_CODE = 500;
     private const CALLBACK_ID = 123;
     private const OPERATION_ID = 555;
+    private const OPERATION_KEY = 0;
 
     /** @var \Inriver\Adapter\Api\CallbackRepositoryInterface|\Inriver\Adapter\Test\Unit\Helper\MockObject */
     private $callbackRepository;
@@ -69,6 +70,7 @@ class InriverCallbackTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->getInriverCallback()->createCallbackOperationAfterAsyncOperations(
             self::OPERATION_ID,
+            self::OPERATION_KEY,
             self::BULK_UUID,
             OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED,
             self::ERROR_CODE,
@@ -84,6 +86,7 @@ class InriverCallbackTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->getInriverCallback()->createCallbackOperationAfterAsyncOperations(
             self::OPERATION_ID,
+            self::OPERATION_KEY,
             self::BULK_UUID,
             OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED,
             self::ERROR_CODE,
@@ -138,6 +141,7 @@ class InriverCallbackTest extends TestCase
 
         $this->getInriverCallback()->createCallbackOperationAfterAsyncOperations(
             self::OPERATION_ID,
+            self::OPERATION_KEY,
             self::BULK_UUID,
             $status,
             $errorCode,
@@ -170,6 +174,7 @@ class InriverCallbackTest extends TestCase
 
         $this->getInriverCallback()->createCallbackOperationAfterAsyncOperations(
             self::OPERATION_ID,
+            self::OPERATION_KEY,
             self::BULK_UUID,
             OperationInterface::STATUS_TYPE_COMPLETE,
             null,
@@ -367,7 +372,7 @@ class InriverCallbackTest extends TestCase
         $this->json = $this->createMock(Json::class);
         $this->json->method('serialize')->willReturn(self::MESSAGE_SERIALIZE);
         $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
-        $this->logger = $this->createMock(createMockLogger::class);
+        $this->logger = $this->createMock(Logger::class);
 
         $this->callback = $this->createMock(Callback::class);
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Inriver\Adapter\Model;
 
 use Exception;
-use Magento\AsynchronousOperations\Api\Data\AsyncResponseInterface;
 use Magento\AsynchronousOperations\Api\Data\AsyncResponseInterfaceFactory;
 use Magento\AsynchronousOperations\Api\Data\ItemStatusInterface;
 use Magento\AsynchronousOperations\Api\Data\ItemStatusInterfaceFactory;

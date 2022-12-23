@@ -21,6 +21,7 @@ use Inriver\Adapter\Model\Operation\CsvImportByUrlOperation;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface;
+use Magento\Store\Api\WebsiteRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 
 class CsvImportByUrlOperationTest extends TestCase
@@ -46,6 +47,9 @@ class CsvImportByUrlOperationTest extends TestCase
 
     /** @var \Inriver\Adapter\Api\Data\ProductsImportRequestInterface|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $message;
+
+    /** @var \Magento\Store\Api\WebsiteRepositoryInterface|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $websiteRepository;
 
     public function testMissingTargetDirectoryConfiguration(): void
     {
@@ -111,6 +115,8 @@ class CsvImportByUrlOperationTest extends TestCase
 
         $this->message = $this->createMock(ProductsImportRequestInterface::class);
         $this->message->method('getUrl')->willReturn(self::SOME_URL);
+
+        $this->websiteRepository = $this->createMock(WebsiteRepositoryInterface::class);
     }
 
     private function getNewSubject(): CsvImportByUrlOperation
@@ -120,7 +126,8 @@ class CsvImportByUrlOperationTest extends TestCase
             $this->importFactory,
             $this->downloader,
             $this->filesystem,
-            $this->fileEncoding
+            $this->fileEncoding,
+            $this->websiteRepository
         );
     }
 }

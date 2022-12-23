@@ -15,5 +15,4 @@ namespace Inriver\Adapter\Api;
  */
 interface CategoryAttributeOptionsInterface extends AttributeOptionsInterface
 {
-
 }

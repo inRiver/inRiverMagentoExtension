@@ -125,8 +125,10 @@ class Import implements ImportInterface
         if (!$this->validateFile($filename)) {
             $this->log('File validation failed', LogLevel::ERROR);
             $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
-            $this->eventManager->dispatch('inriver_treatment_import_validation_failure',
-                ['import' => $this, 'filename' => $filename]);
+            $this->eventManager->dispatch(
+                'inriver_treatment_import_validation_failure',
+                ['import' => $this, 'filename' => $filename]
+            );
             return false;
         }
         $this->log("after validate");
@@ -151,8 +153,10 @@ class Import implements ImportInterface
                 } else {
                     $this->log('The import was successful. ' . $this->getFormattedLogTrace());
                     $this->moveFileAfterImport($filename, self::SUCCESS_FOLDER);
-                    $this->eventManager->dispatch('inriver_treatment_after_import_success',
-                        ['import' => $this, 'filename' => $filename]);
+                    $this->eventManager->dispatch(
+                        'inriver_treatment_after_import_success',
+                        ['import' => $this, 'filename' => $filename]
+                    );
                 }
 
                 $importModel->invalidateIndex();
@@ -167,8 +171,10 @@ class Import implements ImportInterface
                 }
 
                 $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
-                $this->eventManager->dispatch('inriver_treatment_after_import_failure',
-                    ['import' => $this, 'filename' => $filename]);
+                $this->eventManager->dispatch(
+                    'inriver_treatment_after_import_failure',
+                    ['import' => $this, 'filename' => $filename]
+                );
             }
         } catch (InvalidArgumentException $e) {
             $errors = $this->getFormattedLogTrace();
@@ -178,8 +184,10 @@ class Import implements ImportInterface
             }
             $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
 
-            $this->eventManager->dispatch('inriver_treatment_import_exception',
-                ['import' => $this, 'filename' => $filename, 'exception' => $e]);
+            $this->eventManager->dispatch(
+                'inriver_treatment_import_exception',
+                ['import' => $this, 'filename' => $filename, 'exception' => $e]
+            );
             $this->log('Invalid source. ' . $errors, LogLevel::ERROR);
         } catch (LocalizedException $e) {
             $this->log('Import failed', LogLevel::ERROR);
@@ -192,8 +200,10 @@ class Import implements ImportInterface
             }
             $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
 
-            $this->eventManager->dispatch('inriver_treatment_after_import_failure',
-                ['import' => $this, 'filename' => $filename, 'exception' => $e]);
+            $this->eventManager->dispatch(
+                'inriver_treatment_after_import_failure',
+                ['import' => $this, 'filename' => $filename, 'exception' => $e]
+            );
             $this->log($errors, LogLevel::ERROR);
         } finally {
             $this->log('Finished', LogLevel::INFO);
@@ -282,10 +292,8 @@ class Import implements ImportInterface
                 [
                     'entity' => InriverImportHelper::INRIVER_ENTITY,
                     'is_inriver' => true,
-                    MagentoImport::FIELD_NAME_VALIDATION_STRATEGY =>
-                        ProcessingErrorAggregatorInterface::VALIDATION_STRATEGY_SKIP_ERRORS,
-                    MagentoImport::FIELD_NAME_ALLOWED_ERROR_COUNT =>
-                        $this->scopeConfig->getValue(self::XML_INRIVER_MAX_ALLOWED_ERROR),
+                    MagentoImport::FIELD_NAME_VALIDATION_STRATEGY => ProcessingErrorAggregatorInterface::VALIDATION_STRATEGY_SKIP_ERRORS,
+                    MagentoImport::FIELD_NAME_ALLOWED_ERROR_COUNT => $this->scopeConfig->getValue(self::XML_INRIVER_MAX_ALLOWED_ERROR),
                     'managed_websites' => $this->getManagedWebsites()
                 ]
             );
@@ -388,5 +396,4 @@ class Import implements ImportInterface
     {
         return $this->managedWebsites;
     }
-
 }

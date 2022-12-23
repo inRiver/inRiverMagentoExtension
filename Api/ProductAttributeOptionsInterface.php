@@ -15,5 +15,4 @@ namespace Inriver\Adapter\Api;
  */
 interface ProductAttributeOptionsInterface extends AttributeOptionsInterface
 {
-
 }

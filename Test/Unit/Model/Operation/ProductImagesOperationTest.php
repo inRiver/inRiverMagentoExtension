@@ -16,6 +16,7 @@ use Inriver\Adapter\Api\Data\InriverMediaGalleryDataInterface;
 use Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Helper\FileDownloader;
+use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Model\Data\InriverMediaGalleryData;
 use Inriver\Adapter\Model\Data\InriverMediaGalleryDataFactory;
 use Inriver\Adapter\Model\Data\ProductImages;
@@ -27,6 +28,7 @@ use Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterface;
 use Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterfaceFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\CatalogInventory\Model\StockRegistryStorage;
 use Magento\Framework\Api\Data\ImageContentInterface;
 use Magento\Framework\Api\Data\ImageContentInterfaceFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -69,6 +71,12 @@ class ProductImagesOperationTest extends TestCase
 
     /** @var \Inriver\Adapter\Model\MediaGallery\MediaGalleryManagement|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $mediaGalleryManagement;
+
+    /** @var \Magento\CatalogInventory\Model\StockRegistryStorage|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $stockRegistryStorage;
+
+    /** @var \Inriver\Adapter\Logger\Logger|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
+    private $logger;
 
     public function testMessageWithoutData(): void
     {
@@ -306,6 +314,8 @@ class ProductImagesOperationTest extends TestCase
         $this->inriverMediaGalleryDataRepository = $this->createMock(InriverMediaGalleryDataRepositoryInterface::class);
         $this->inriverMediaGalleryDataFactory = $this->createMock(InriverMediaGalleryDataFactory::class);
         $this->mediaGalleryManagement = $this->createMock(MediaGalleryManagement::class);
+        $this->stockRegistryStorage = $this->createMock(StockRegistryStorage::class);
+        $this->logger = $this->createMock(Logger::class);
     }
 
     private function getSubject(): ProductImagesOperation
@@ -320,7 +330,9 @@ class ProductImagesOperationTest extends TestCase
             $this->productRepository,
             $this->inriverMediaGalleryDataRepository,
             $this->inriverMediaGalleryDataFactory,
-            $this->mediaGalleryManagement
+            $this->mediaGalleryManagement,
+            $this->stockRegistryStorage,
+            $this->logger
         );
     }
 

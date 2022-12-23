@@ -31,6 +31,9 @@ use function strpos;
 
 class InriverCallback
 {
+    public const CALLBACK_HEADER = 'x-inriver-callback';
+    public const RUNTIME_ID_HEADER = 'x-inriver-runtime-id';
+
     private const RESPONSE_HEADER_INRIVER_APIKEY = 'X-inRiver-APIKey';
     private const INRIVER_API_KEY = 'inriver/import/inriver_api_key';
     private const OPERATION_REPORT = 'operations_report';
@@ -100,7 +103,6 @@ class InriverCallback
         ?string $message = null,
         $resultData = null
     ): void {
-
         try {
             //No operation are created for call that don't have the callback header
             $callbackOperation = $this->callbackOperationRepository->getByOperationId($operationId);
@@ -155,8 +157,7 @@ class InriverCallback
                 } catch (Exception $e) {
                     $empty = false;
                     $messageArray['additional_messages'] = [
-                        'Message' =>
-                            'An error occured while deserializing $resultData, see Magento log for more information',
+                        'Message' => 'An error occured while deserializing $resultData, see Magento log for more information',
                         'Exception' => $e->getMessage()
                     ];
                     $this->logger->log(
@@ -188,47 +189,54 @@ class InriverCallback
      */
     public function returnResponseToInriverAfterAsyncOperations(string $bulkUuid): void
     {
-        $apiKey = $this->getApiKey();
+        try {
+            $this->logger->info("This bulk had an operation done $bulkUuid");
+            $apiKey = $this->getApiKey();
 
-        if ($apiKey !== null && $apiKey !== '') {
-            try {
-                $callback = $this->callbackRepository->getByBulkUuid($bulkUuid);
-            } catch (NoSuchEntityException $e) {
-                // No callback to handle
-                return;
-            }
+            if ($apiKey !== null && $apiKey !== '') {
+                try {
+                    $callback = $this->callbackRepository->getByBulkUuid($bulkUuid);
+                } catch (NoSuchEntityException $e) {
+                    // No callback to handle
+                    return;
+                }
 
-            $callbackId = $callback->getCallBackId();
+                $callbackId = $callback->getCallBackId();
 
-            if ($callbackId !== null) {
-                $callbackOperations = $this->callbackOperationRepository->getListByCallbackId($callbackId)->getItems();
-
-                if (count($callbackOperations) === $callback->getNumberOfOperations()) {
-                    $response = $this->sendResponse(
-                        $apiKey,
-                        $callback->getCallBackUrl(),
-                        $this->createResultMessage($callbackOperations, $callback)
-                    );
-
-                    if ($response->getStatusCode() === 200) {
-                        $callback->setInriverNotified(true);
-                        $this->callbackRepository->save($callback);
-                    } else {
-                        $this->logger->log(
-                            LogLevel::ERROR,
-                            'An error occured while doing the inRiver Callback: ' .
-                            'Http Error Code: ' . $response->getStatusCode() .
-                            ' Error Message: ' . $response->getReasonPhrase()
+                if ($callbackId !== null) {
+                    $callbackOperations = $this->callbackOperationRepository->getListByCallbackId($callbackId)->getItems();
+                    $countOperation = count($callbackOperations);
+                    $totalOperation = $callback->getNumberOfOperations();
+                    $this->logger->info("Operation Count $countOperation vs $totalOperation");
+                    if ($countOperation === $totalOperation) {
+                        $response = $this->sendResponse(
+                            $apiKey,
+                            $callback->getCallBackUrl(),
+                            $this->createResultMessage($callbackOperations, $callback)
                         );
+
+                        if ($response->getStatusCode() === 200) {
+                            $callback->setInriverNotified(true);
+                            $this->callbackRepository->save($callback);
+                        } else {
+                            $this->logger->log(
+                                LogLevel::ERROR,
+                                'An error occured while doing the inRiver Callback: ' .
+                                'Http Error Code: ' . $response->getStatusCode() .
+                                ' Error Message: ' . $response->getReasonPhrase()
+                            );
+                        }
                     }
                 }
+            } else {
+                $this->logger->log(
+                    LogLevel::ERROR,
+                    'An error occured while doing inRiver Callback: ' .
+                    'Your inRiver API key is missing in your configuration, see documentation for more information'
+                );
             }
-        } else {
-            $this->logger->log(
-                LogLevel::ERROR,
-                'An error occured while doing inRiver Callback: ' .
-                'Your inRiver API key is missing in your configuration, see documentation for more information'
-            );
+        } catch (\Exception $ex) {
+            $this->logger->error('An error occured while doing inRiver Callback: ' . $ex->getMessage());
         }
     }
 

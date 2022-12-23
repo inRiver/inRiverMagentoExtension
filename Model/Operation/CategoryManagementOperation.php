@@ -72,7 +72,7 @@ class CategoryManagementOperation implements CategoryManagementInterface
         try {
             $model->move($parentId, $afterId);
         } catch (\Exception $e) {
-            $message =  __('Could not move category %1: %2', $categoryId, $e->getMessage());
+            $message = __('Could not move category %1: %2', $categoryId, $e->getMessage());
             $this->logger->error($message);
             throw new \Magento\Framework\Exception\LocalizedException($message, $e);
         }

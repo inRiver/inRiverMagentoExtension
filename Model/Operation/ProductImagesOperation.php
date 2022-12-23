@@ -133,7 +133,7 @@ class ProductImagesOperation implements ImagesInterface
         $this->logger->info(
             __('Starting Product Images Operation for sku: %1', $productImage->getSku())
         );
-        $result =  $this->syncProductImages($productImage->getSku(), $productImage->getImages());
+        $result = $this->syncProductImages($productImage->getSku(), $productImage->getImages());
         $this->logger->info(
             __('Finished Product Images Operation for sku: %1', $productImage->getSku())
         );

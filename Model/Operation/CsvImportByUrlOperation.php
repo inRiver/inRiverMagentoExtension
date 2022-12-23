@@ -104,7 +104,6 @@ class CsvImportByUrlOperation implements ProductsImportInterface
      */
     protected function getCsvFile(): string
     {
-
         $destination = $this->getTargetDirectory() . '/import-' . date('Ymdhis') . '.csv';
         $bytesWritten = $this->downloader->download($this->sourceUrl, $destination);
 
@@ -142,6 +141,7 @@ class CsvImportByUrlOperation implements ProductsImportInterface
 
     /**
      * @param string $path
+     * @param string $managedWebsiteIds
      *
      * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -156,12 +156,12 @@ class CsvImportByUrlOperation implements ProductsImportInterface
     }
 
     /**
-     *
+     * @param array|null $managedWebsiteIds
      */
     private function getManagedWebsiteIds(?array $managedWebsites): string
     {
-        if($managedWebsites !== null) {
-            $ids = array();
+        if ($managedWebsites !== null) {
+            $ids = [];
             foreach ($managedWebsites as $code) {
                 $ids[] = $this->websiteRepository->get($code)->getId();
             }

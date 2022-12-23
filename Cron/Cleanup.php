@@ -37,11 +37,12 @@ class Cleanup
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Inriver\Adapter\Logger\Logger $logger
      */
-    public function __construct(DirectoryList        $directoryList,
-                                File                 $driverFile,
-                                ScopeConfigInterface $scopeConfig,
-                                Logger               $logger)
-    {
+    public function __construct(
+        DirectoryList        $directoryList,
+        File                 $driverFile,
+        ScopeConfigInterface $scopeConfig,
+        Logger               $logger
+    ) {
         $this->directoryList = $directoryList;
         $this->driverFile = $driverFile;
         $this->scopeConfig = $scopeConfig;
@@ -61,7 +62,6 @@ class Cleanup
         $this->cleanFolder($rootFolder . $DS . Import::ERRORS_FOLDER);
 
         return $this;
-
     }
 
     /**
@@ -90,4 +90,3 @@ class Cleanup
         }
     }
 }
-

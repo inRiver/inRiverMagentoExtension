@@ -68,7 +68,6 @@ class ProductsImportRequest implements ProductsImportRequestInterface
         return $url;
     }
 
-
     /**
      * List of website code managed by the current adapter
      *
@@ -88,7 +87,7 @@ class ProductsImportRequest implements ProductsImportRequestInterface
      */
     public function setManagedWebsites(?array $website): ProductsImportRequestInterface
     {
-        if($website !== null) {
+        if ($website !== null) {
             $this->managedWebsite = $website;
         }
 

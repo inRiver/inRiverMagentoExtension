@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 class OptionTest extends TestCase
 {
-
     public function testSetAdminValue(): void
     {
         $option = new Option();

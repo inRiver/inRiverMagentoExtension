@@ -53,8 +53,7 @@ class Product extends ProductImport
         $errorMessage = null,
         $errorLevel = ProcessingError::ERROR_LEVEL_CRITICAL,
         $errorDescription = null
-    )
-    {
+    ) {
         if ($errorCode === ValidatorInterface::ERROR_MEDIA_URL_NOT_ACCESSIBLE && $this->isDebug()) {
             return $this;
         }
@@ -122,7 +121,7 @@ class Product extends ProductImport
                 $managedWebsites = $this->getParameters()["managed_websites"];
 
                 if ($managedWebsites !== '') {
-                       $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $managedWebsites);
+                    $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $managedWebsites);
                 }
                 if (count($delProductId) > 0) {
                     $this->_connection->delete($tableName, $whereClause);
