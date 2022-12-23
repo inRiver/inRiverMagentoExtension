@@ -116,7 +116,7 @@ class ProductImagesOperation implements ImagesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface $productImage
      *
-     * @return array
+     * @return string[]
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -142,7 +142,7 @@ class ProductImagesOperation implements ImagesInterface
      * @param string $sku
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface[] $images
      *
-     * @return array
+     * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

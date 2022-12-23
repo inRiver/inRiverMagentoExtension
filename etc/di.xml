@@ -46,6 +46,9 @@
     <preference for="Magento\ImportExport\Model\Import"
                 type="Inriver\Adapter\Model\ImportExport\Import" />
 
+    <preference for="Inriver\Adapter\Api\ProductsImportRelationsInterface"
+                type="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation"/>
+
     <preference for="Inriver\Adapter\Api\ProductAttributeOptionsInterface"
                 type="Inriver\Adapter\Model\Operation\AttributeOptionsOperation"/>
     <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface"

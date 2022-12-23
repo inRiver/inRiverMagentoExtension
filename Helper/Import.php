@@ -29,8 +29,8 @@ class Import
     public const IS_INRIVER_IMPORT = 'is_inriver_import';
 
     public const LIST_OF_CHARACTER_TO_DECODE_AND_ENCODE_FOR_IMPORT = [
-        'search' => ['%3D', '%2C', '%22', '%7C', '%25'],
-        'replace' => ['=', ',', '"', '|', '%'],
+        'search' => ['%3D', '%2C', '%22', '%7C', '%25', '%0A', '%0D'],
+        'replace' => ['=', ',', '"', '|', '%', "\n", "\r"],
     ];
     public const ATTRIBUTES_TYPE_NOT_TO_DECODE_FOR_INSERT = [
         'datetime',

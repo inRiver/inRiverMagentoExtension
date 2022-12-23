@@ -20,7 +20,7 @@ interface ProductCategoriesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories
      *
-     * @return array
+     * @return string[]
      *
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */

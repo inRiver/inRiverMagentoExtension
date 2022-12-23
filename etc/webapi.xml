@@ -33,7 +33,7 @@
         </resources>
     </route>
     <route method="POST" url="/V1/inriver-adapter/products/import/relations">
-        <service class="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation" method="post"/>
+        <service class="Inriver\Adapter\Api\ProductsImportRelationsInterface" method="post"/>
         <resources>
             <resource ref="Inriver_Adapter::write"/>
         </resources>

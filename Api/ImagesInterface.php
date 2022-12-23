@@ -22,7 +22,7 @@ interface ImagesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface $productImage
      *
-     * @return array
+     * @return string[]
      *
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */

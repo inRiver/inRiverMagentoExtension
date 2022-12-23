@@ -185,7 +185,6 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     /**
      * @param string $sku
      * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
-     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
      *
      * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException

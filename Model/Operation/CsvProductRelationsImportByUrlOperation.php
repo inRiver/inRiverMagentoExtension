@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Model\Operation;
 
+use Inriver\Adapter\Api\ProductsImportRelationsInterface;
 use Inriver\Adapter\Helper\FileDownloader;
 use Inriver\Adapter\Helper\FileEncoding;
 use Inriver\Adapter\Model\Data\ImportFactory;
@@ -20,7 +21,7 @@ use Magento\Framework\Filesystem;
 /**
  * Class CsvProductRelationsImportByUrlOperation Csv Product Relations Import by url Operation
  */
-class CsvProductRelationsImportByUrlOperation extends CsvImportByUrlOperation
+class CsvProductRelationsImportByUrlOperation extends CsvImportByUrlOperation implements ProductsImportRelationsInterface
 {
     /** @var \Inriver\Adapter\Model\Data\ImportFactory */
     protected $importProductRelationsFactory;
