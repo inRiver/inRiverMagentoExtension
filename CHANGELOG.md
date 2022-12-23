@@ -1,3 +1,6 @@
+##Version 24.4.2
+- Fix an error with bulk processing when the bulk api call doesn't comes from inriver
+
 ##Version 24.4.1
 - Include patch MDVA-40896 to fix error between bulk operation and Magento_ReCaptchaWebapiRest. If you are on 2.4.3 and have this extension active you have to apply the patch under \\wsl$\Ubuntu\home\absolunet\project\Adapters-Magento-Module\Inriver\Adapter\src\Patch
 - Split category assignement into add and remove call to allow the option to skip category handling from inRiver in certain store

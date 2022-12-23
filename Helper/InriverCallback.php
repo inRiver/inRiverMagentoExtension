@@ -100,9 +100,10 @@ class InriverCallback
         ?string $message = null,
         $resultData = null
     ): void {
-        $callbackOperation = $this->callbackOperationRepository->getByOperationId($operationId);
 
         try {
+            //No operation are created for call that don't have the callback header
+            $callbackOperation = $this->callbackOperationRepository->getByOperationId($operationId);
             $callback = $this->callbackRepository->getByBulkUuid($bulkUuid);
         } catch (NoSuchEntityException $e) {
             // No callback to handle
