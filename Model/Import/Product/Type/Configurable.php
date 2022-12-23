@@ -89,11 +89,7 @@ class Configurable extends \Magento\ConfigurableImportExport\Model\Import\Produc
                 $this->inriverImportHelper->decodeImportAttributeValue($option['_super_attribute_option']);
         }
 
-        $productId = null;
-
-        if (isset($this->_productData[$this->getProductEntityLinkField()])) {
-            $productId = $this->_productData[$this->getProductEntityLinkField()];
-        }
+        $productId = $this->_productData[$this->getProductEntityLinkField()];
 
         if ($productId !== null) {
             if (!isset($this->productSuperAttrIds[$productId])) {

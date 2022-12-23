@@ -1,5 +1,8 @@
-##Version 23.4.6
-- Fix the constructor call
+##Version 23.5.1
+- Fix Warning: Undefined array key "managed_websites"
+
+##Version 23.5.0
+- Added new endpoint for the 1.8.0 version of the inRiver Adapter
 
 ##Version 23.4.5
 - Fix the cleanup cron for "errors" folder

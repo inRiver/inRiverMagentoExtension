@@ -7,82 +7,53 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Inriver\Adapter\Api\VersionsInterface"
-                type="Inriver\Adapter\Model\Versions"/>
-    <preference for="Inriver\Adapter\Api\TestCallbackInterface"
-                type="Inriver\Adapter\Model\TestCallback"/>
-    <preference for="Inriver\Adapter\Api\SkusListInterface"
-                type="Inriver\Adapter\Model\SkusList"/>
-    <preference for="Inriver\Adapter\Api\ErrorCodesInterface"
-                type="Inriver\Adapter\Model\ErrorCodes"/>
-    <preference for="Inriver\Adapter\Api\Data\AppVersionsInterface"
-                type="Inriver\Adapter\Model\Data\AppVersions"/>
-    <preference for="Inriver\Adapter\Api\Data\ValidationMessageInterface"
-                type="Inriver\Adapter\Model\Data\ValidationMessage"/>
+    <preference for="Inriver\Adapter\Api\VersionsInterface" type="Inriver\Adapter\Model\Versions"/>
+    <preference for="Inriver\Adapter\Api\TestCallbackInterface" type="Inriver\Adapter\Model\TestCallback"/>
+    <preference for="Inriver\Adapter\Api\SkusListInterface" type="Inriver\Adapter\Model\SkusList"/>
+    <preference for="Inriver\Adapter\Api\ErrorCodesInterface" type="Inriver\Adapter\Model\ErrorCodes"/>
+    <preference for="Inriver\Adapter\Api\Data\AppVersionsInterface" type="Inriver\Adapter\Model\Data\AppVersions"/>
+    <preference for="Inriver\Adapter\Api\Data\ValidationMessageInterface" type="Inriver\Adapter\Model\Data\ValidationMessage"/>
 
-    <preference for="Inriver\Adapter\Api\ImagesInterface"
-                type="Inriver\Adapter\Model\Operation\ProductImagesOperation"/>
-    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface"
-                type="Inriver\Adapter\Model\Data\ProductImages"/>
-    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface"
-                type="Inriver\Adapter\Model\Data\ProductImages\Image"/>
-    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface\AttributesInterface"
-                type="Inriver\Adapter\Model\Data\ProductImages\Images\Attributes"/>
+    <preference for="Inriver\Adapter\Api\ImagesInterface" type="Inriver\Adapter\Model\Operation\ProductImagesOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface" type="Inriver\Adapter\Model\Data\ProductImages"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface" type="Inriver\Adapter\Model\Data\ProductImages\Image"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface\AttributesInterface" type="Inriver\Adapter\Model\Data\ProductImages\Images\Attributes"/>
 
-    <preference for="Inriver\Adapter\Api\CategoryManagementInterface"
-                type="Inriver\Adapter\Model\Operation\CategoryManagementOperation"/>
+    <preference for="Inriver\Adapter\Api\CategoryManagementInterface" type="Inriver\Adapter\Model\Operation\CategoryManagementOperation"/>
 
-    <preference for="Inriver\Adapter\Api\ProductCategoriesInterface"
-                type="Inriver\Adapter\Model\Operation\ProductCategoriesOperation"/>
-    <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface"
-                type="Inriver\Adapter\Model\Data\ProductCategories"/>
-    <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface"
-                type="Inriver\Adapter\Model\Data\ProductCategories\Category"/>
+    <preference for="Inriver\Adapter\Api\ProductCategoriesInterface" type="Inriver\Adapter\Model\Operation\ProductCategoriesOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface" type="Inriver\Adapter\Model\Data\ProductCategories"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface" type="Inriver\Adapter\Model\Data\ProductCategories\Category"/>
 
-    <preference for="Inriver\Adapter\Api\ProductsImportInterface"
-                type="Inriver\Adapter\Model\Operation\CsvImportByUrlOperation"/>
-    <preference for="Inriver\Adapter\Api\Data\ProductsImportRequestInterface"
-                type="Inriver\Adapter\Model\Data\ProductsImportRequest"/>
-    <preference for="Magento\ImportExport\Model\Import"
-                type="Inriver\Adapter\Model\ImportExport\Import" />
+    <preference for="Inriver\Adapter\Api\ProductsImportInterface" type="Inriver\Adapter\Model\Operation\CsvImportByUrlOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductsImportRequestInterface" type="Inriver\Adapter\Model\Data\ProductsImportRequest"/>
+    <preference for="Magento\ImportExport\Model\Import" type="Inriver\Adapter\Model\ImportExport\Import" />
 
-    <preference for="Inriver\Adapter\Api\ProductsImportRelationsInterface"
-                type="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation"/>
+    <preference for="Inriver\Adapter\Api\ProductsImportRelationsInterface" type="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation"/>
 
-    <preference for="Inriver\Adapter\Api\ProductAttributeOptionsInterface"
-                type="Inriver\Adapter\Model\Operation\AttributeOptionsOperation"/>
-    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface"
-                type="Inriver\Adapter\Model\Data\OptionsByAttribute"/>
-    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface"
-                type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option"/>
-    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface"
-                type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option\Values"/>
+    <preference for="Inriver\Adapter\Api\ProductAttributeOptionsInterface" type="Inriver\Adapter\Model\Operation\AttributeOptionsOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute"/>
+    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option"/>
+    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option\Values"/>
 
-    <preference for="Inriver\Adapter\Api\Data\CallbackInterface"
-                type="Inriver\Adapter\Model\Data\Callback"/>
-    <preference for="Inriver\Adapter\Api\Data\CallbackOperationInterface"
-                type="Inriver\Adapter\Model\Data\CallbackOperation"/>
-    <preference for="Inriver\Adapter\Api\CallbackRepositoryInterface"
-                type="Inriver\Adapter\Model\CallbackRepository" />
-    <preference for="Inriver\Adapter\Api\CallbackOperationRepositoryInterface"
-                type="Inriver\Adapter\Model\CallbackOperationRepository" />
+    <preference for="Inriver\Adapter\Api\Data\CallbackInterface" type="Inriver\Adapter\Model\Data\Callback"/>
+    <preference for="Inriver\Adapter\Api\Data\CallbackOperationInterface" type="Inriver\Adapter\Model\Data\CallbackOperation"/>
+    <preference for="Inriver\Adapter\Api\CallbackRepositoryInterface" type="Inriver\Adapter\Model\CallbackRepository" />
+    <preference for="Inriver\Adapter\Api\CallbackOperationRepositoryInterface" type="Inriver\Adapter\Model\CallbackOperationRepository" />
 
-    <preference for="Inriver\Adapter\Api\Data\InriverMediaGalleryDataInterface"
-                type="Inriver\Adapter\Model\InriverMediaGalleryData"/>
-    <preference for="Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface"
-                type="Inriver\Adapter\Model\InriverMediaGalleryDataRepository"/>
+    <preference for="Inriver\Adapter\Api\Data\InriverMediaGalleryDataInterface" type="Inriver\Adapter\Model\InriverMediaGalleryData"/>
+    <preference for="Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface" type="Inriver\Adapter\Model\InriverMediaGalleryDataRepository"/>
 
-    <preference for="Magento\AsynchronousOperations\Model\MassSchedule"
-                type="Inriver\Adapter\Model\MassSchedule"/>
+    <preference for="Magento\AsynchronousOperations\Model\MassSchedule" type="Inriver\Adapter\Model\MassSchedule"/>
 
-    <preference for="Inriver\Adapter\Api\Data\OperationResultInterface"
-                type="Inriver\Adapter\Model\Data\OperationResult"/>
+    <preference for="Inriver\Adapter\Api\Data\OperationResultInterface" type="Inriver\Adapter\Model\Data\OperationResult"/>
 
-    <preference for="Inriver\Adapter\Api\Data\ErrorCodeInterface"
-                type="Inriver\Adapter\Model\Data\ErrorCode"/>
+    <preference for="Inriver\Adapter\Api\Data\ErrorCodeInterface" type="Inriver\Adapter\Model\Data\ErrorCode"/>
 
-    <preference for="Magento\BundleImportExport\Model\Import\Product\Type\Bundle"
-                type="Inriver\Adapter\Model\Import\Product\Type\Bundle" />
+    <preference for="Magento\BundleImportExport\Model\Import\Product\Type\Bundle" type="Inriver\Adapter\Model\Import\Product\Type\Bundle" />
+
+    <preference for="Inriver\Adapter\Api\AttributeInterface" type="Inriver\Adapter\Model\Attribute"/>
+    <preference for="Inriver\Adapter\Api\Data\AttributeSetInterface" type="Inriver\Adapter\Model\Data\AttributeSet"/>
 
     <type name="Inriver\Adapter\Model\ImportExport\Import">
         <plugin name="use_inriver_import_data" type="Inriver\Adapter\Plugin\UseInriverImportDataPlugin"/>

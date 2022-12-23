@@ -60,7 +60,18 @@ class InriverProductImportTypeAbstractPlugin
                     if (!in_array($attributeCode, InriverImportHelper::ATTRIBUTES_NOT_TO_DECODE, true)) {
                         $attribute = $subject->retrieveAttribute($attributeCode, $attributeSet);
 
-                        if ($this->isAttributeImportable($attribute, $attributeValue)) {
+                        if (
+                            $attribute !== []
+                            && array_key_exists('is_static', $attribute)
+                            && array_key_exists('type', $attribute)
+                            && !$attribute['is_static']
+                            && is_string($attributeValue)
+                            && !in_array(
+                                $attribute['type'],
+                                InriverImportHelper::ATTRIBUTES_TYPE_NOT_TO_DECODE_FOR_INSERT,
+                                true
+                            )
+                        ) {
                             $rowData[$attributeCode] =
                                 $this->inriverImportHelper->decodeImportAttributeValue($attributeValue);
                         }
@@ -70,27 +81,5 @@ class InriverProductImportTypeAbstractPlugin
         }
 
         return [$rowData, $withDefaultValue];
-    }
-
-    /**
-     * Verify if the attribute info is proper so that we can actually decode and import it
-     *
-     * @param string[] $attribute
-     * @param array|string $attributeValue
-     *
-     * @return bool
-     */
-    private function isAttributeImportable($attribute, $attributeValue): bool
-    {
-        return $attribute !== []
-            && array_key_exists('is_static', $attribute)
-            && array_key_exists('type', $attribute)
-            && !$attribute['is_static']
-            && is_string($attributeValue)
-            && !in_array(
-                $attribute['type'],
-                InriverImportHelper::ATTRIBUTES_TYPE_NOT_TO_DECODE_FOR_INSERT,
-                true
-            );
     }
 }

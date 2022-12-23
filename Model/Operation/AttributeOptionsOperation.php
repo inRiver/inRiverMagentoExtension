@@ -184,13 +184,13 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
                     $this->updateOption($attribute, $currentOption, $updatedOption);
                     unset($newOptionList[$currentOption->getValue()]);
                 } catch (InputException $exception) {
-                        $attributeOptionErrors[] = __(
-                            'An error occured while importing value(' .
-                            $updatedOption->getAdminValue() .
-                            ') for attribute(' .
+                    $attributeOptionErrors[] = __(
+                        'An error occured while importing value(' .
+                        $updatedOption->getAdminValue() .
+                        ') for attribute(' .
                         $attribute->getAttributeCode() . '): ' .
-                            $exception->getMessage()
-                        );
+                        $exception->getMessage()
+                    );
                 }
             }
         }
@@ -298,7 +298,6 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         AttributeOption $currentOption = null,
         AttributeInterface $attribute = null
     ): array {
-        $originalStoreId = $attribute !== null ?  $attribute->getStoreId() : 0;
         $labels = [];
         foreach ($newOption->getValues() as $value) {
             $storeId = $this->storeManager->getStore($value->getStoreViewCode())->getId();
@@ -315,6 +314,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
                             ->getSource()
                             ->getOptionText($currentOption->getId());
                         $label->setLabel($labelValue);
+                        $attribute->setStoreId(0);
                     }
                 }
                 $label->setData('swatchtext', $value->getValue());
@@ -336,7 +336,8 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
                     $labels[$storeId] = $label;
                 }
             }
-            $attribute->setStoreId($originalStoreId);
+
+            $attribute->setStoreId(0);
         }
         return $labels;
     }
