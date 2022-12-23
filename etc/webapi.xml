@@ -80,4 +80,10 @@
             <resource ref="Inriver_Adapter::write"/>
         </resources>
     </route>
+    <route method="POST" url="/V1/inriver-adapter/categories/import/completed">
+        <service class="Inriver\Adapter\Api\CategoryManagementInterface" method="completed"/>
+        <resources>
+            <resource ref="Inriver_Adapter::write"/>
+        </resources>
+    </route>
 </routes>

@@ -34,6 +34,27 @@
                 <field id="cleanup_days" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Archive Lifetime in days</label>
                 </field>
+                <field id="maximum_download_retry_attempt" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum download retry attempt</label>
+                    <comment>Product import file download</comment>
+                </field>
+                <field id="initial_download_retry_sleep" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Initial wait between retry in seconds </label>
+                    <comment>Will double each attempt (30/60/120...)</comment>
+                </field>
+                <field id="maximum_download_images_retry_attempt" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum download retry attempt for images</label>
+                    <comment>Image import file download</comment>
+                </field>
+                <field id="initial_download_images_retry_sleep" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Initial wait between retry in seconds for images</label>
+                    <comment>Will double each attempt (5/10/20...)</comment>
+		</field>
+                <field id="force_update_status_on_creation" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Allow update status on creation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If this setting is set to YES and a status is provided by inRiver, new product will be created by this status. If it is set to NO or no status are provided, new product will always be created as DISABLED.</comment>
+                </field>
             </group>
         </section>
     </system>

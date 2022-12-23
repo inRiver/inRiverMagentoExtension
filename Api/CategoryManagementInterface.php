@@ -26,4 +26,13 @@ interface CategoryManagementInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function move($categoryId, $parentId, $afterId = null): bool;
+
+    /**
+     * @param \Inriver\Adapter\Api\Data\CategoriesImportInterface $categoriesImport
+     *
+     * @return bool
+     *
+     * @noinspection PhpFullyQualifiedNameUsageInspection
+     */
+    public function completed(\Inriver\Adapter\Api\Data\CategoriesImportInterface $categoriesImport): bool;
 }

@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Helper;
 
+use Inriver\Adapter\Api\Data\ImportInterface;
+use Inriver\Adapter\Logger\Logger;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
@@ -39,13 +42,22 @@ class FileDownloader
     /** @var \Magento\Framework\Filesystem\Io\File */
     protected $file;
 
-    /** @var FileDriver */
+    /** @var \Magento\Framework\Filesystem\Driver\File */
     protected $fileDriver;
+
+    /** @var \Inriver\Adapter\Logger\Logger */
+    protected $logger;
+
+    /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
+    protected $scopeConfig;
 
     /**
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \Magento\Framework\Filesystem\File\ReadFactory $readFactory
      * @param \Magento\Framework\Filesystem\Io\File $file
+     * @param \Magento\Framework\Filesystem\Driver\File $fileDriver
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Inriver\Adapter\Logger\Logger $logger
      *
      * @throws \Magento\Framework\Exception\FileSystemException
      */
@@ -53,12 +65,17 @@ class FileDownloader
         Filesystem $filesystem,
         ReadFactory $readFactory,
         File $file,
-        FileDriver $fileDriver
+        FileDriver $fileDriver,
+        ScopeConfigInterface $scopeConfig,
+        Logger $logger
     ) {
         $this->directory = $filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
         $this->readFactory = $readFactory;
         $this->file = $file;
         $this->fileDriver = $fileDriver;
+        $this->scopeConfig = $scopeConfig;
+        $this->logger = $logger;
+
     }
 
     /**
@@ -92,18 +109,34 @@ class FileDownloader
             );
         }
 
-        try {
-            $written = $this->directory->writeFile(
-                $destination,
-                $this->readFactory->create($normalizedUrl, $driver)->readAll()
-            );
-        } catch (Throwable $e) {
-            throw new LocalizedException(
-                __('Cannot download file from %1: %2', $url, $e->getMessage()),
-                null,
-                ErrorCodesDirectory::CANNOT_DOWNLOAD_CSV_FILE
-            );
-        }
+        $attempts = 1;
+        $retryAfter = $this->getAttemptSleep();
+        $maxAttempt = $this->getMaxAttempt();
+        do {
+            try {
+                $written = $this->directory->writeFile(
+                    $destination,
+                    $this->readFactory->create($normalizedUrl, $driver)->readAll()
+                );
+            } catch (Throwable $e) {
+                if ($attempts < $maxAttempt) {
+                    $this->logger->info(__('Cannot download file from %1: %2 (%3)', $url, $e->getMessage(), $attempts + 1));
+                    sleep($retryAfter);
+                    $retryAfter *= 2;
+                    $attempts++;
+
+                    continue;
+                }
+
+                throw new LocalizedException(
+                    __('Cannot download file from %1: %2', $url, $e->getMessage()),
+                    null,
+                    ErrorCodesDirectory::CANNOT_DOWNLOAD_CSV_FILE
+                );
+            }
+            break;
+        } while ($attempts <= $maxAttempt);
+
 
         return $written;
     }
@@ -113,6 +146,7 @@ class FileDownloader
      *
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws Throwable
      */
     public function getRemoteFileContent(string $url): string
     {
@@ -127,7 +161,29 @@ class FileDownloader
         $driver = array_key_exists('isHttps', $matches) ? DriverPool::HTTPS : DriverPool::HTTP;
         $normalizedUrl = str_replace($matches[0], '', $url);
 
-        return $this->readFactory->create($normalizedUrl, $driver)->readAll();
+        $attempts = 1;
+        $retryAfter = $this->getAttemptSleepImages();
+        $maxAttempt = $this->getMaxAttemptImages();
+        $data = '';
+        do {
+            try {
+                $data = $this->readFactory->create($normalizedUrl, $driver)->readAll();
+            } catch (Throwable $e) {
+                if ($attempts < $maxAttempt) {
+                    $this->logger->info(__('Cannot download file from %1: %2 (%3)', $url, $e->getMessage(), $attempts + 1));
+                    sleep($retryAfter);
+                    $retryAfter *= 2;
+                    $attempts++;
+
+                    continue;
+                }
+
+                throw $e;
+            }
+            break;
+        } while ($attempts <= $maxAttempt);
+
+        return $data;
     }
 
     /**
@@ -143,5 +199,21 @@ class FileDownloader
         $this->file->setAllowCreateFolders(true);
 
         return $this->directory->create($this->fileDriver->getParentDirectory($destination));
+    }
+
+    public function getMaxAttempt() {
+        return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_MAX_ALLOWED_ERROR);
+    }
+
+    public function getAttemptSleep() {
+        return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_INITIAL_DOWNLOAD_RETRY_SLEEP);
+    }
+
+    public function getMaxAttemptImages() {
+        return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_MAX_DOWNLOAD_IMAGES_RETRY_ATTEMPT);
+    }
+
+    public function getAttemptSleepImages() {
+        return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_INITIAL_DOWNLOAD_IMAGES_RETRY_SLEEP);
     }
 }

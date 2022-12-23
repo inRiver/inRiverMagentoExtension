@@ -1,3 +1,12 @@
+##Version 24.7.0
+- Added new endpoint for the 1.9.0 version of the inRiver Adapter
+- Fixes issue for newly created categories where url_path and url_rewrites are not correctly generated via Magento's bulk API
+- Adding retry logic to the file download for product import and product relation import
+- Adding retry logic to the image download
+- Added new configuration for retry amount and initial sleep for the retry logic. Image and import file has different config
+- Add config to bypass forcing newly created product to disabled. You need to send the status from inriver
+- Fix image roles
+
 ##Version 24.6.1
 - Fix Warning: Undefined array key "managed_websites"
 

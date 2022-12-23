@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Plugin;
 
+use Inriver\Adapter\Helper\Import;
 use Inriver\Adapter\Helper\Import as InriverImportHelper;
 use Inriver\Adapter\Model\Import\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
@@ -48,11 +49,12 @@ class InriverProductImportPlugin
             $subject->setIsImportTypeDisable($this->inriverImportHelper->isImportTypeDisable($rowData));
         }
 
-        if ($this->inriverImportHelper->isNewProductRowWithNoPrice($rowData) &&
-            $subject->isImportTypeDisable() === false
-        ) {
+        if ($this->inriverImportHelper->isNewProductRowWithNoPrice($rowData) && $subject->isImportTypeDisable() === false) {
             $rowData['price'] = 0.00;
-            $rowData['status'] = Status::STATUS_DISABLED;
+
+            if(!array_key_exists(Import::COL_STATUS, $rowData)) {
+                $rowData[Import::COL_STATUS] = Status::STATUS_DISABLED;
+            }
         }
 
         if (

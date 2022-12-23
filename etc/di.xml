@@ -28,6 +28,8 @@
     <preference for="Inriver\Adapter\Api\Data\ProductsImportRequestInterface" type="Inriver\Adapter\Model\Data\ProductsImportRequest"/>
     <preference for="Magento\ImportExport\Model\Import" type="Inriver\Adapter\Model\ImportExport\Import" />
 
+    <preference for="Inriver\Adapter\Api\Data\CategoriesImportInterface" type="Inriver\Adapter\Model\Data\CategoriesImport"/>
+
     <preference for="Inriver\Adapter\Api\ProductsImportRelationsInterface" type="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation"/>
 
     <preference for="Inriver\Adapter\Api\ProductAttributeOptionsInterface" type="Inriver\Adapter\Model\Operation\AttributeOptionsOperation"/>

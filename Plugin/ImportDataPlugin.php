@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Plugin;
 
+use Inriver\Adapter\Api\Data\ImportInterface;
 use Inriver\Adapter\Exception\EmptyImportException;
 use Inriver\Adapter\Helper\Import;
 use Inriver\Adapter\Model\ResourceModel\Import\Data;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\CatalogImportExport\Model\Import\Product;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 use function __;
@@ -24,16 +26,23 @@ use function reset;
 
 class ImportDataPlugin
 {
+
     /** @var \Inriver\Adapter\Helper\Import */
-    private $importHelper;
+    protected $importHelper;
+
+    /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
+    protected $scopeConfig;
 
     /**
      * @param \Inriver\Adapter\Helper\Import $importHelper
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        Import $importHelper
+        Import $importHelper,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->importHelper = $importHelper;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -94,7 +103,10 @@ class ImportDataPlugin
     {
         foreach ($result as $rowKey => $rowData) {
             if ($this->importHelper->isNewProductRowWithNoPrice($rowData)) {
-                $result[$rowKey]['status'] = Status::STATUS_DISABLED;
+                if($this->getForceUpdateStatusConfig() === 0 || !isset($rowData[Import::COL_STATUS]) || $rowData[Import::COL_STATUS] === '') {
+                    $result[$rowKey][Import::COL_STATUS] = Status::STATUS_DISABLED;
+                }
+
                 $result[$rowKey]['price'] = 0.00;
             }
 
@@ -108,5 +120,10 @@ class ImportDataPlugin
         }
 
         return $result;
+    }
+
+    public function getForceUpdateStatusConfig(): int
+    {
+        return (int)$this->scopeConfig->getValue(ImportInterface::XML_INRIVER_FORCE_UPDATE_STATUS_ON_CREATION);
     }
 }

@@ -49,6 +49,8 @@ class Import
         'swatch_image',
     ];
 
+    public const COL_STATUS = 'status';
+
     /** @var \Magento\CatalogImportExport\Model\Import\Product\SkuProcessor */
     private $skuProcessor;
 
