@@ -184,7 +184,11 @@ class ProductImagesOperation implements ImagesInterface
             try {
                 $this->createNewMediaEntry($newImage, $sku);
             } catch (LocalizedException $ex) {
-                $errors[] = ['error_code' => $ex->getCode(), 'error_message' => $ex->getMessage()];
+                $errors[] = [
+                    'error_code' => $ex->getCode() ? $ex->getCode() : ErrorCodesDirectory::CANNOT_DOWNLOAD_MEDIA_FILE,
+                    'error_message' => 'There was an error with image ' . $newImage->getFilename() .
+                        ' for sku ' . $sku . ': ' . $ex->getMessage(),
+                ];
             }
         }
 

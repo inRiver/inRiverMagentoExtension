@@ -69,6 +69,7 @@ class AddCallbackLogicPlugin
 
             $this->inriverCallback->createCallbackOperationAfterAsyncOperations(
                 $operationId,
+                $operationKey,
                 $bulkUuid,
                 $status,
                 $errorCode,

@@ -1,3 +1,8 @@
+##Version 24.4.0
+- Update images error messages to include file name and product sku
+- Adding new move category endpoint to have more control on error messages
+- Change Operation Id in response message for Operation Key to match the key in the request message
+
 ##Version 24.3.3
 - Forced the cleaning of the Product Repository cache in the Product Category Assignment operation to make sure it's loaded properly for editing
 - Added start and finished logs to Attribute Options, product category assignment and product images Operations

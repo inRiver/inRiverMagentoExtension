@@ -90,6 +90,30 @@ class CallbackOperation extends AbstractModel implements CallbackOperationInterf
         return $this;
     }
 
+    /**
+     * Get the operation id
+     *
+     * @return int
+     */
+    public function getOperationKey(): int
+    {
+        return (int) $this->getData(CallbackOperationInterface::OPERATION_KEY);
+    }
+
+    /**
+     * Set operation id
+     *
+     * @param int $operationKey
+     *
+     * @return \Inriver\Adapter\Api\Data\CallbackOperationInterface
+     */
+    public function setOperationKey(int $operationKey): CallbackOperationInterface
+    {
+        $this->setData(CallbackOperationInterface::OPERATION_KEY, $operationKey);
+
+        return $this;
+    }
+
     /** @noinspection ReturnTypeCanBeDeclaredInspection */
     //phpcs:ignore SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint
     protected function _construct(): void

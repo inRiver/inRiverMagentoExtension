@@ -43,6 +43,7 @@
         <column xsi:type="int" name="error_count" padding="10" unsigned="true" nullable="false" comment="Number of errors"/>
         <column xsi:type="longtext" name="messages" nullable="false" comment="Errors messages"/>
         <column xsi:type="int" name="operation_id" padding="10" unsigned="true" nullable="true" comment="Operation ID"/>
+        <column xsi:type="int" name="operation_key" padding="10" unsigned="true" nullable="false" comment="Operation key"/>
         <constraint xsi:type="foreign" referenceId="INRIVER_ASYNC_CALLBACK_OPERATION_ID_MAGENTO_OPERATION_ID"
                     table="inriver_async_callback_operation" column="operation_id" referenceTable="magento_operation"
                     referenceColumn="id" onDelete="CASCADE"/>

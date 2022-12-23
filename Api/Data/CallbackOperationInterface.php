@@ -18,6 +18,7 @@ interface CallbackOperationInterface extends ExtensibleDataInterface
     public const MESSAGES = 'messages';
     public const ERROR_COUNT = 'error_count';
     public const OPERATION_ID = 'operation_id';
+    public const OPERATION_KEY = 'operation_key';
 
     /**
      * @return int|null
@@ -82,4 +83,16 @@ interface CallbackOperationInterface extends ExtensibleDataInterface
      * @return \Inriver\Adapter\Api\Data\CallbackOperationInterface
      */
     public function setOperationId(int $operationId): CallbackOperationInterface;
+
+    /**
+     * @return int|null
+     */
+    public function getOperationKey(): ?int;
+
+    /**
+     * @param int $operationKey
+     *
+     * @return \Inriver\Adapter\Api\Data\CallbackOperationInterface
+     */
+    public function setOperationKey(int $operationKey): CallbackOperationInterface;
 }

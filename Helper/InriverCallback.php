@@ -80,6 +80,7 @@ class InriverCallback
 
     /**
      * @param int $operationId
+     * @param int $operationKey
      * @param string $bulkUuid
      * @param int $status
      * @param int|null $errorCode
@@ -92,6 +93,7 @@ class InriverCallback
      */
     public function createCallbackOperationAfterAsyncOperations(
         int $operationId,
+        int $operationKey,
         string $bulkUuid,
         int $status,
         ?int $errorCode,
@@ -171,6 +173,7 @@ class InriverCallback
             }
 
             $callbackOperation->setCallbackId($callbackId);
+            $callbackOperation->setOperationKey($operationKey);
 
             $this->callbackOperationRepository->save($callbackOperation);
         }
@@ -273,7 +276,9 @@ class InriverCallback
             $operationMessages = $callbackOperation->getMessages();
 
             if (is_string($operationMessages) && $operationMessages !== '') {
-                $reportItems[$callbackOperation->getOperationId()] = $this->json->unserialize($operationMessages);
+                //php json encode remove index if it begin with 0 even if it's string, the space force it
+                $key = $callbackOperation->getOperationKey() ? (string)$callbackOperation->getOperationKey() : " 0";
+                $reportItems[$key] = $this->json->unserialize($operationMessages);
             }
         }
 
