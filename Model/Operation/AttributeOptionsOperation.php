@@ -15,6 +15,7 @@ use Inriver\Adapter\Api\Data\OptionsByAttributeInterface;
 use Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Model\Entity\Attribute\OptionManagementExtended;
+use Inriver\Adapter\Logger\Logger;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Api\AttributeRepositoryInterface;
@@ -79,7 +80,10 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
     protected $attributeOptionCollectionFactory;
 
     /** @var \Magento\Swatches\Helper\Data */
-    private $swatchHelper;
+    protected $swatchHelper;
+
+    /** @var \Inriver\Adapter\Logger\Logger */
+    protected $logger;
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -92,6 +96,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory
      *        $attributeOptionCollectionFactory
      * @param \Magento\Swatches\Helper\Data $swatchHelper
+     * @param \Inriver\Adapter\Logger\Logger $logger
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -102,7 +107,8 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         StoreManagerInterface $storeManager,
         Option $option,
         CollectionFactory $attributeOptionCollectionFactory,
-        Data $swatchHelper
+        Data $swatchHelper,
+        Logger $logger
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->attributeRepository = $attributeRepository;
@@ -113,6 +119,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         $this->attributeOptionCollectionFactory = $attributeOptionCollectionFactory;
         $this->option = $option;
         $this->swatchHelper = $swatchHelper;
+        $this->logger = $logger;
     }
 
     /**
@@ -129,9 +136,12 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      */
     public function post(OptionsByAttributeInterface $optionsByAttribute): void
     {
+        $this->logger->addInfo(__('Starting Attribute options Operation'));
         foreach ($optionsByAttribute->getAttributes() as $attribute) {
+            $this->logger->addInfo(__('Importing options for Attributes: %1', $attribute));
             $this->processAttribute($attribute, $optionsByAttribute->getOptions(), Product::ENTITY);
         }
+        $this->logger->addInfo(__('Finished Attribute options Operation'));
     }
 
     /**

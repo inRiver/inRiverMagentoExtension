@@ -110,7 +110,7 @@ class Import implements ImportInterface
 
             return false;
         }
-
+        $this->log('After Validate', LogLevel::INFO);
         $result = false;
 
         try {

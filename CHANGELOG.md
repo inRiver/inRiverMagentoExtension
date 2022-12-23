@@ -1,3 +1,8 @@
+##Version 23.3.3
+- Forced the cleaning of the Product Repository cache in the Product Category Assignment operation to make sure it's loaded properly for editing
+- Added start and finished logs to Attribute Options, product category assignment and product images Operations
+
+
 ##Version 23.3.2
 - Fixed some exception handling and added more information in the messages
 
