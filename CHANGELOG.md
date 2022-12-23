@@ -1,3 +1,7 @@
+##Version 24.2.0
+- Better error message when an attribute option value is invalid. 
+- Continue processing other option value if one is invalid
+
 ##Version 24.1.1
 - Fix Error while serializing result data to generate callback
 - Fix inRiver Callback to handle exception in the additional message validation and send it back to inRiver

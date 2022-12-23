@@ -25,12 +25,15 @@ use Magento\Eav\Model\ResourceModel\Entity\Attribute\Option;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Phrase;
 use Magento\Store\Model\StoreManagerInterface;
 
 use function __;
 use function array_key_exists;
+use function count;
 
 class AttributeOptionsOperation implements AttributeOptionsInterface
 {
@@ -146,6 +149,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         }
 
         $newOptionList = [];
+        $attributeOptionErrors = [];
 
         foreach ($newOptions as $option) {
             $newOptionList[$option->getAdminValue()] = $option;
@@ -157,15 +161,42 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         foreach ($currentOptions as $currentOption) {
             /** @var \Magento\Eav\Model\Entity\Attribute\Option $currentOption */
             if (array_key_exists($currentOption->getValue(), $newOptionList)) {
-                $updatedOption = $newOptionList[$currentOption->getValue()];
-                $this->updateOption($attribute, $currentOption, $updatedOption);
-                unset($newOptionList[$currentOption->getValue()]);
+                try {
+                    $updatedOption = $newOptionList[$currentOption->getValue()];
+                    $this->updateOption($attribute, $currentOption, $updatedOption);
+                    unset($newOptionList[$currentOption->getValue()]);
+                } catch (InputException $exception) {
+                        $attributeOptionErrors[] = __(
+                            'An error occured while importing value(' .
+                            $updatedOption->getAdminValue() .
+                            ') for attribute(' .
+                            $attribute->getAttributeCode() .'): ' .
+                            $exception->getMessage()
+                        );
+                }
             }
+
         }
 
         // Create remaining options
         foreach ($newOptionList as $newOption) {
-            $this->createOption($attribute, $newOption);
+            try {
+                $this->createOption($attribute, $newOption);
+            } catch (InputException $exception) {
+                $attributeOptionErrors[] = __(
+                    'An error occured while importing value(' .
+                    $newOption->getAdminValue() .
+                    ') for attribute(' .
+                    $attribute->getAttributeCode() .'): ' .
+                    $exception->getMessage()
+                );
+            }
+        }
+
+        if (count($attributeOptionErrors) >0) {
+            $errorMessage = __('There were errors while importing attributes option values: ');
+            $errorMessage .= implode(',', $attributeOptionErrors);
+            throw new InputException(new Phrase($errorMessage));
         }
     }
 
@@ -188,9 +219,9 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         $currentOption->setStoreLabels($labels);
 
         $this->attributeOptionManagement->update(
-            (string) $attribute->getEntityTypeId(),
-            (string) $attribute->getAttributeCode(),
-            (int) $currentOption->getId(),
+            (string)$attribute->getEntityTypeId(),
+            (string)$attribute->getAttributeCode(),
+            (int)$currentOption->getId(),
             $currentOption
         );
     }
