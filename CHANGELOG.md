@@ -1,7 +1,9 @@
-##Version 24.3.2
-- Fixed some exception handling
-- Added root exception message in some cascading exception
+##Version 24.3.3
+- Forced the cleaning of the Product Repository cache in the Product Category Assignment operation to make sure it's loaded properly for editing
+- Added start and finished logs to Attribute Options, product category assignment and product images Operations
 
+##Version 24.3.2
+- Fixed some exception handling and added information
 
 ##Version 24.3.1
 - Added support for text swatch

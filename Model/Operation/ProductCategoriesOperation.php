@@ -13,10 +13,12 @@ namespace Inriver\Adapter\Model\Operation;
 use Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface;
 use Inriver\Adapter\Api\ProductCategoriesInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
+use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Setup\Patch\Data\CategoryPimUniqueId;
 use Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory;
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
+use Magento\CatalogInventory\Model\StockRegistryStorage;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Throwable;
@@ -36,19 +38,32 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     /** @var \Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory */
     private $categoryLinkInterfaceFactory;
 
+    /** @var \Magento\CatalogInventory\Model\StockRegistryStorage */
+    private $stockRegistryStorage;
+
+    /** @var \Inriver\Adapter\Logger\Logger  */
+    private $logger;
+
     /**
      * @param \Magento\Catalog\Api\ProductRepositoryInterfaceFactory $productRepositoryFactory
      * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
      * @param \Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory $categoryLinkInterfaceFactory
+     * @param \Magento\CatalogInventory\Model\StockRegistryStorage $stockRegistryStorage
+     * @param \Inriver\Adapter\Logger\Logger $logger
      */
     public function __construct(
         ProductRepositoryInterfaceFactory $productRepositoryFactory,
         CollectionFactory $categoryCollectionFactory,
-        CategoryLinkInterfaceFactory $categoryLinkInterfaceFactory
+        CategoryLinkInterfaceFactory $categoryLinkInterfaceFactory,
+        StockRegistryStorage $stockRegistryStorage,
+        Logger $logger
+
     ) {
         $this->productRepositoryFactory = $productRepositoryFactory;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->categoryLinkInterfaceFactory = $categoryLinkInterfaceFactory;
+        $this->stockRegistryStorage = $stockRegistryStorage;
+        $this->logger = $logger;
     }
 
     /**
@@ -63,7 +78,14 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     public function post(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array
     {
-        return $this->processProduct($productCategories->getSku(), $productCategories->getCategories());
+        $this->logger->addInfo(
+            __('Started Product Category Assignement Operation for sku: %1', $productCategories->getSku())
+        );
+        $result =  $this->processProduct($productCategories->getSku(), $productCategories->getCategories());
+        $this->logger->addInfo(
+            __('Finished  Product Category Assignement Operation for sku: %1', $productCategories->getSku())
+        );
+        return $result;
     }
 
     /**
@@ -76,8 +98,14 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     private function processProduct(string $sku, array $categories): array
     {
         try {
+            // Clean both stock registry and product repository cache to force a reload.
+            // This Fixes a rare bug if another extension loaded wrong data in them.
+            $this->stockRegistryStorage->clean();
+
             $productRepository = $this->productRepositoryFactory->create();
-            $product = $productRepository->get($sku);
+            $productRepository->cleanCache();
+            $product = $productRepository->get($sku, true, null, true);
+
         } catch (NoSuchEntityException $exception) {
             throw new LocalizedException(
                 __('The sku %1 does not exist', $sku),

@@ -17,6 +17,7 @@ use Inriver\Adapter\Api\ImagesInterface;
 use Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Helper\FileDownloader;
+use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Model\Data\InriverMediaGalleryDataFactory;
 use Inriver\Adapter\Model\MediaGallery\MediaGalleryManagement;
 use Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterface;
@@ -68,6 +69,9 @@ class ProductImagesOperation implements ImagesInterface
     /** @var \Inriver\Adapter\Model\MediaGallery\MediaGalleryManagement */
     protected $mediaGalleryManagement;
 
+    /** @var \Inriver\Adapter\Logger\Logger */
+    private $logger;
+
     /**
      * @param \Inriver\Adapter\Helper\FileDownloader $downloader
      * @param \Magento\Framework\Filesystem $filesystem
@@ -78,8 +82,7 @@ class ProductImagesOperation implements ImagesInterface
      * @param \Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface $inriverMediaGalleryDataRepository
      * @param \Inriver\Adapter\Model\Data\InriverMediaGalleryDataFactory $inriverMediaGalleryDataFactory
      * @param \Inriver\Adapter\Model\MediaGallery\MediaGalleryManagement $mediaGalleryManagement
-     *
-     * @throws \Exception
+     * @param \Inriver\Adapter\Logger\Logger $logger
      */
     public function __construct(
         FileDownloader $downloader,
@@ -90,7 +93,8 @@ class ProductImagesOperation implements ImagesInterface
         ProductRepository $productRepository,
         InriverMediaGalleryDataRepositoryInterface $inriverMediaGalleryDataRepository,
         InriverMediaGalleryDataFactory $inriverMediaGalleryDataFactory,
-        MediaGalleryManagement $mediaGalleryManagement
+        MediaGalleryManagement $mediaGalleryManagement,
+        Logger $logger
     ) {
         $this->downloader = $downloader;
         $this->filesystem = $filesystem;
@@ -101,6 +105,7 @@ class ProductImagesOperation implements ImagesInterface
         $this->inriverMediaGalleryDataRepository = $inriverMediaGalleryDataRepository;
         $this->inriverMediaGalleryDataFactory = $inriverMediaGalleryDataFactory;
         $this->mediaGalleryManagement = $mediaGalleryManagement;
+        $this->logger = $logger;
     }
 
     /**
@@ -118,7 +123,14 @@ class ProductImagesOperation implements ImagesInterface
      */
     public function post(ProductImagesInterface $productImage): array
     {
-        return $this->syncProductImages($productImage->getSku(), $productImage->getImages());
+        $this->logger->addInfo(
+            __('Starting Product Images Operation for sku: %1', $productImage->getSku())
+        );
+        $result =  $this->syncProductImages($productImage->getSku(), $productImage->getImages());
+        $this->logger->addInfo(
+            __('Finished Product Images Operation for sku: %1', $productImage->getSku())
+        );
+        return $result;
     }
 
     /**

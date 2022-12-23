@@ -60,7 +60,6 @@ class CsvProductRelationsImportByUrlOperation extends CsvImportByUrlOperation
         /** @var \Inriver\Adapter\Model\Data\ImportProductRelations $import */
         $import = $this->importProductRelationsFactory->create();
         $import->execute($path);
-
         return $import->getErrorsAsArray();
     }
 }
