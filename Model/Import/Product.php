@@ -139,7 +139,7 @@ class Product extends ProductImport
         $debug = $this->scopeConfig->getValue(self::IS_DEBUG_MODE);
 
         if ($debug !== null) {
-            return $debug;
+            return (bool) $debug;
         }
 
         return $this->debug;

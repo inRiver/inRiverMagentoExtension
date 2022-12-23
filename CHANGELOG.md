@@ -1,3 +1,8 @@
+##Version 24.4.3
+- Fix an error with the implementation of endpoint products/import/relations
+- Fix the list of special characters according to the list in the inRiver adapter
+- Fix a type cast error when isDebug is set in the config
+
 ##Version 24.4.2
 - Fix an error with bulk processing when the bulk api call doesn't comes from inriver
 
