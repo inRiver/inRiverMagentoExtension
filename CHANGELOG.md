@@ -1,3 +1,6 @@
+##Version 23.5.2
+- Fix the constructor call
+
 ##Version 23.5.1
 - Fix Warning: Undefined array key "managed_websites"
 

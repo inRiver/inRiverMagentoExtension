@@ -59,7 +59,7 @@ class CsvImportByUrlOperation implements ProductsImportInterface
      * @param \Inriver\Adapter\Helper\FileDownloader $downloader
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \Inriver\Adapter\Helper\FileEncoding $fileEncoding
-     * @param \Magento\Store\Api\WebsiteRepositoryInterface $storeManager
+     * @param \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -67,7 +67,7 @@ class CsvImportByUrlOperation implements ProductsImportInterface
         FileDownloader $downloader,
         Filesystem $filesystem,
         FileEncoding $fileEncoding,
-        WebsiteRepositoryInterface  $websiteRepository
+        WebsiteRepositoryInterface $websiteRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->importFactory = $importFactory;
@@ -172,6 +172,6 @@ class CsvImportByUrlOperation implements ProductsImportInterface
             return implode(',', $ids);
         }
 
-        return  '';
+        return '';
     }
 }

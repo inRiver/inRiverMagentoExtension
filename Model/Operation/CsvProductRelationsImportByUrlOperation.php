@@ -43,14 +43,9 @@ class CsvProductRelationsImportByUrlOperation extends CsvImportByUrlOperation im
         Filesystem $filesystem,
         FileEncoding $fileEncoding,
         ImportProductRelationsFactory $importProductRelationsFactory,
-        WebsiteRepositoryInterface  $websiteRepository
+        WebsiteRepositoryInterface $websiteRepository
     ) {
         parent::__construct(
-            $this->scopeConfig = $scopeConfig,
-            $this->importFactory = $importFactory,
-            $this->downloader = $downloader,
-            $this->filesystem = $filesystem,
-            $this->fileEncoding = $fileEncoding,
             $scopeConfig,
             $importFactory,
             $downloader,

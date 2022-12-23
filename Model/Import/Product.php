@@ -120,16 +120,16 @@ class Product extends ProductImport
                 foreach (array_keys($websiteData) as $sku) {
                     $delProductId[] = $this->skuProcessor->getNewSku($sku)['entity_id'];
                 }
-            }
-            $whereClause = $this->_connection->quoteInto('product_id IN (?)', $delProductId);
+                $whereClause = $this->_connection->quoteInto('product_id IN (?)', $delProductId);
 
-            $parameters = $this->getParameters();
+                $parameters = $this->getParameters();
 
-            if (isset($parameters['managed_websites']) && $parameters['managed_websites'] !== '') {
-                $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $parameters['managed_websites']);
-            }
-            if (count($delProductId) > 0) {
-                $this->_connection->delete($tableName, $whereClause);
+                if (isset($parameters['managed_websites']) && $parameters['managed_websites'] !== '') {
+                    $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $parameters['managed_websites']);
+                }
+                if (count($delProductId) > 0) {
+                    $this->_connection->delete($tableName, $whereClause);
+                }
             }
         }
 
