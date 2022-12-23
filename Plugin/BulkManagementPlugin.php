@@ -7,7 +7,7 @@
 /** @noinspection MessDetectorValidationInspection */
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @author    InRiver <iif-magento@inriver.com>
+ * @author    InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link      https://www.inriver.com/
  */
@@ -153,6 +153,13 @@
         <arguments>
             <argument name="sensitive" xsi:type="array">
                 <item name="inriver/import/inriver_api_key" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="cleanupCommand" xsi:type="object">Inriver\Adapter\Console\Command\CleanupCommand</item>
             </argument>
         </arguments>
     </type>

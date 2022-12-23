@@ -1,3 +1,14 @@
+##Version 24.4.4
+- Fix code to allow virtual product
+- Fix to product import to keep website associated to a product that is not managed by the adapter
+- Fix the email in the source code
+- Fix code to allow virtual product
+- Fix product import to allow websites not managed by the adapter
+- Added Archiving of imported file for product import
+- Added a new config: "Archive Lifetime in days" (default: 30)
+- Added patch PATCH_INRIVER_MAGENTO_ADAPTER_2.4.3-p2-Bulk-Api.patch to replace MDVA-40896_EE_2.4.3_COMPOSER_v1.patch for magento >=2.4.3-p2 as it was not fixing the issue anymore. If you are on 2.4.3-p2, please apply this new patch
+
+
 ##Version 24.4.3
 - Fix an error with the implementation of endpoint products/import/relations
 - Fix the list of special characters according to the list in the inRiver adapter

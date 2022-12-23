@@ -31,6 +31,9 @@
                     <label>Maximum allowed error in batch</label>
                     <comment>The maximum allowed validation error in a batch before the import stop instead of skipping them</comment>
                 </field>
+                <field id="cleanup_days" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Archive Lifetime in days</label>
+                </field>
             </group>
         </section>
     </system>

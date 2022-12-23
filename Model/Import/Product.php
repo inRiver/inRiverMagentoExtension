@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  * This file applies minor modifications to native Magento code.
@@ -53,7 +53,8 @@ class Product extends ProductImport
         $errorMessage = null,
         $errorLevel = ProcessingError::ERROR_LEVEL_CRITICAL,
         $errorDescription = null
-    ) {
+    )
+    {
         if ($errorCode === ValidatorInterface::ERROR_MEDIA_URL_NOT_ACCESSIBLE && $this->isDebug()) {
             return $this;
         }
@@ -116,12 +117,15 @@ class Product extends ProductImport
                 foreach (array_keys($websiteData) as $sku) {
                     $delProductId[] = $this->skuProcessor->getNewSku($sku)['entity_id'];
                 }
+                $whereClause = $this->_connection->quoteInto('product_id IN (?)', $delProductId);
 
+                $managedWebsites = $this->getParameters()["managed_websites"];
+
+                if ($managedWebsites !== '') {
+                       $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $managedWebsites);
+                }
                 if (count($delProductId) > 0) {
-                    $this->_connection->delete(
-                        $tableName,
-                        $this->_connection->quoteInto('product_id IN (?)', $delProductId)
-                    );
+                    $this->_connection->delete($tableName, $whereClause);
                 }
             }
         }
@@ -139,7 +143,7 @@ class Product extends ProductImport
         $debug = $this->scopeConfig->getValue(self::IS_DEBUG_MODE);
 
         if ($debug !== null) {
-            return (bool) $debug;
+            return (bool)$debug;
         }
 
         return $this->debug;

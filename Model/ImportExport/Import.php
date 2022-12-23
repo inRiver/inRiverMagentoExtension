@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <iif-magento@inriver.com>
+ * @author InRiver <inriveradapters@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  * This file applies minor modifications to native Magento code.
@@ -89,7 +89,6 @@ class Import extends ParentImport
                 } else {
                     throw new LocalizedException(__('Please enter a correct entity.'));
                 }
-
                 $this->_entityAdapter->setParameters($this->getData());
             } else {
                 return parent::_getEntityAdapter();
