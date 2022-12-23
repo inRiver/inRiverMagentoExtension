@@ -1,3 +1,6 @@
+##Version 23.3.6
+- Added Archiving of imported file for product import
+
 ##Version 23.3.5
 - Stale file handle fix.
 

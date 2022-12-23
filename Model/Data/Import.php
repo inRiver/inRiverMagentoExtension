@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Model\Data;
 
+use Exception;
 use Inriver\Adapter\Api\Data\ImportInterface;
 use Inriver\Adapter\Api\Data\OperationResultInterfaceFactory;
 use Inriver\Adapter\Helper\Import as InriverImportHelper;
@@ -17,8 +18,10 @@ use Inriver\Adapter\Logger\Logger;
 use InvalidArgumentException;
 use Magento\CatalogImportExport\Model\Import\Product\RowValidatorInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Event\Manager;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadFactory;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\ImportExport\Model\Import as MagentoImport;
@@ -38,6 +41,9 @@ use function in_array;
 class Import implements ImportInterface
 {
     protected const ERROR_LOG_PREFIX = 'InRiver Import';
+    public const ARCHIVES_FOLDER = 'archives';
+    public const SUCCESS_FOLDER = 'success';
+    public const ERRORS_FOLDER = 'errors';
 
     /** @var \Inriver\Adapter\Logger\Logger */
     private $logger;
@@ -66,6 +72,9 @@ class Import implements ImportInterface
     /** @var \Inriver\Adapter\Api\Data\OperationResultInterfaceFactory */
     private $operationResultFactory;
 
+    /** @var \Magento\Framework\Filesystem\Directory\WriteInterface */
+    protected $directory;
+
     /**
      * @param \Magento\ImportExport\Model\ImportFactory $importModelFactory
      * @param \Inriver\Adapter\Logger\Logger $logger
@@ -75,6 +84,7 @@ class Import implements ImportInterface
      * @param \Magento\Framework\Filesystem\Io\File $ioFile
      * @param \Magento\Framework\Event\Manager $eventManager
      * @param \Inriver\Adapter\Api\Data\OperationResultInterfaceFactory $operationResultFactory
+     * @param \Magento\Framework\Filesystem $fs
      */
     public function __construct(
         ImportFactory $importModelFactory,
@@ -84,7 +94,8 @@ class Import implements ImportInterface
         ScopeConfigInterface $scopeConfig,
         File $ioFile,
         Manager $eventManager,
-        OperationResultInterfaceFactory $operationResultFactory
+        OperationResultInterfaceFactory $operationResultFactory,
+        Filesystem $fs
     ) {
         $this->importModelFactory = $importModelFactory;
         $this->logger = $logger;
@@ -94,6 +105,7 @@ class Import implements ImportInterface
         $this->ioFile = $ioFile;
         $this->eventManager = $eventManager;
         $this->operationResultFactory = $operationResultFactory;
+        $this->directory = $fs->getDirectoryWrite(DirectoryList::VAR_DIR);
     }
 
     /**
@@ -107,7 +119,11 @@ class Import implements ImportInterface
 
         if (!$this->validateFile($filename)) {
             $this->log('File validation failed', LogLevel::ERROR);
-
+            $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
+            $this->eventManager->dispatch(
+                'inriver_treatment_import_validation_failure',
+                ['import' => $this, 'filename' => $filename]
+            );
             return false;
         }
         $this->log('After Validate', LogLevel::INFO);
@@ -127,9 +143,15 @@ class Import implements ImportInterface
                         $this->log($error->getErrorMessage() . ' - '
                             . $error->getErrorDescription(), LogLevel::ERROR);
                     }
+
+                    $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
                 } else {
-                    $this->log('The import was successful. ' . $this->getFormattedLogTrace(), LogLevel::INFO);
-                    $this->eventManager->dispatch('inriver_treatment_after_import_success', ['import' => $this]);
+                    $this->log('The import was successful. ' . $this->getFormattedLogTrace());
+                    $this->moveFileAfterImport($filename, self::SUCCESS_FOLDER);
+                    $this->eventManager->dispatch(
+                        'inriver_treatment_after_import_success',
+                        ['import' => $this, 'filename' => $filename]
+                    );
                 }
 
                 $importModel->invalidateIndex();
@@ -143,7 +165,11 @@ class Import implements ImportInterface
                         $error->getErrorDescription(), LogLevel::ERROR);
                 }
 
-                $this->eventManager->dispatch('inriver_treatment_after_import_failure', ['import' => $this]);
+                $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
+                $this->eventManager->dispatch(
+                    'inriver_treatment_after_import_failure',
+                    ['import' => $this, 'filename' => $filename]
+                );
             }
         } catch (InvalidArgumentException $e) {
             $errors = $this->getFormattedLogTrace();
@@ -151,21 +177,49 @@ class Import implements ImportInterface
             if (!$errors) {
                 $errors = $e->getMessage();
             }
+            $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
 
+            $this->eventManager->dispatch(
+                'inriver_treatment_import_exception',
+                ['import' => $this, 'filename' => $filename, 'exception' => $e]
+            );
             $this->log('Invalid source. ' . $errors, LogLevel::ERROR);
         } catch (LocalizedException $e) {
+            $this->log('Import failed', LogLevel::ERROR);
             $errors = $this->getFormattedLogTrace();
 
             if (!$errors) {
                 $errors = $e->getMessage();
+            } else {
+                $errors .= "\n" . $e->getMessage();
             }
+            $this->moveFileAfterImport($filename, self::ERRORS_FOLDER);
 
+            $this->eventManager->dispatch(
+                'inriver_treatment_after_import_failure',
+                ['import' => $this, 'filename' => $filename, 'exception' => $e]
+            );
             $this->log($errors, LogLevel::ERROR);
         } finally {
             $this->log('Finished', LogLevel::INFO);
         }
 
         return $result;
+    }
+
+    protected function moveFileAfterImport(string $fileName, string $state)
+    {
+        $DS = DIRECTORY_SEPARATOR;
+        $aPath = Import::ARCHIVES_FOLDER . $DS . $state;
+
+        $pathinfo = $this->ioFile->getPathInfo($fileName);
+        $absoluteNewPath = $pathinfo['dirname'] . $DS . $aPath . $DS . $pathinfo['basename'];
+
+        try {
+            $this->directory->renameFile($fileName, $absoluteNewPath);
+        } catch (\Exception $e) {
+            $this->logger->log(LogLevel::ERROR, 'Error while moving processed file : ' . $e->getMessage());
+        }
     }
 
     /**
@@ -308,6 +362,10 @@ class Import implements ImportInterface
                 ]
             ));
         } catch (LocalizedException $e) {
+            $this->log('File validation failed: ' . $e->getMessage(), LogLevel::ERROR);
+
+            return false;
+        } catch (Exception $e) {
             $this->log('File validation failed: ' . $e->getMessage(), LogLevel::ERROR);
 
             return false;
