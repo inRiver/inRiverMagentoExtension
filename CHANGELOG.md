@@ -1,6 +1,12 @@
+##Version 23.4.1
+- Split category assignement into add and remove call to allow the option to skip category handling from inRiver in certain store
+
 ##Version 23.4.0
 - Update images error messages to include file name and product sku
 - Adding new move category endpoint to have more control on error messages
+
+##Version 23.3.4
+- Fixed a problem where product validation was not creating a unique url. 
 
 ##Version 23.3.3
 - Forced the cleaning of the Product Repository cache in the Product Category Assignment operation to make sure it's loaded properly for editing

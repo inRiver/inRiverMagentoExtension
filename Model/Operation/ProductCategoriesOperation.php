@@ -11,11 +11,15 @@ declare(strict_types=1);
 namespace Inriver\Adapter\Model\Operation;
 
 use Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface;
+use Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterfaceFactory;
 use Inriver\Adapter\Api\ProductCategoriesInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Setup\Patch\Data\CategoryPimUniqueId;
 use Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory;
+use Magento\Catalog\Api\Data\ProductExtensionInterface;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
 use Magento\CatalogInventory\Model\StockRegistryStorage;
@@ -27,9 +31,6 @@ use function __;
 use function array_keys;
 use function array_map;
 
-/**
- * Class ProductCategoriesOperation ProductCategoriesOperation
- */
 class ProductCategoriesOperation implements ProductCategoriesInterface
 {
     /** @var \Magento\Catalog\Api\ProductRepositoryInterfaceFactory */
@@ -41,6 +42,9 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     /** @var \Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory */
     private $categoryLinkInterfaceFactory;
 
+    /** @var \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterfaceFactory */
+    private $inriverCategoryFactory;
+
     /** @var \Magento\CatalogInventory\Model\StockRegistryStorage */
     private $stockRegistryStorage;
 
@@ -50,6 +54,7 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     /**
      * @param \Magento\Catalog\Api\ProductRepositoryInterfaceFactory $productRepositoryFactory
      * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterfaceFactory $inriverCategoryFactory
      * @param \Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory $categoryLinkInterfaceFactory
      * @param \Magento\CatalogInventory\Model\StockRegistryStorage $stockRegistryStorage
      * @param \Inriver\Adapter\Logger\Logger $logger
@@ -57,6 +62,7 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     public function __construct(
         ProductRepositoryInterfaceFactory $productRepositoryFactory,
         CollectionFactory $categoryCollectionFactory,
+        CategoryInterfaceFactory $inriverCategoryFactory,
         CategoryLinkInterfaceFactory $categoryLinkInterfaceFactory,
         StockRegistryStorage $stockRegistryStorage,
         Logger $logger
@@ -66,6 +72,7 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
         $this->categoryLinkInterfaceFactory = $categoryLinkInterfaceFactory;
         $this->stockRegistryStorage = $stockRegistryStorage;
         $this->logger = $logger;
+        $this->inriverCategoryFactory = $inriverCategoryFactory;
     }
 
     /**
@@ -73,7 +80,7 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories
      *
-     * @return array
+     * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException
      *
      * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
@@ -91,6 +98,28 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     }
 
     /**
+     * Remove product categories
+     *
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories
+     *
+     * @return string[]
+     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+     */
+    public function delete(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array
+    {
+        $this->logger->addInfo(
+            __('Started Product Category Assignement Operation for sku: %1', $productCategories->getSku())
+        );
+        $result =  $this->deleteCategoryAssignement($productCategories->getSku(), $productCategories->getCategories());
+        $this->logger->addInfo(
+            __('Finished  Product Category Assignement Operation for sku: %1', $productCategories->getSku())
+        );
+        return $result;
+    }
+
+    /**
      * @param string $sku
      * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
      *
@@ -99,61 +128,47 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     private function processProduct(string $sku, array $categories): array
     {
-        try {
-            // Clean both stockregistry and product repository cache to force a reload.
-            // Fixes bug if another extension loaded wrong data in them
-            $this->stockRegistryStorage->clean();
-            $productRepository = $this->productRepositoryFactory->create();
-            $productRepository->cleanCache();
-            $product = $productRepository->get($sku, true, null, true);
-        } catch (NoSuchEntityException $exception) {
-            throw new LocalizedException(
-                __('The sku %1 does not exist', $sku),
-                $exception,
-                ErrorCodesDirectory::SKU_NOT_FOUND
-            );
-        }
+        /** @var ProductRepositoryInterface $productRepository */
+        $productRepository = $this->productRepositoryFactory->create();
+        $product = $this->getProduct($productRepository, $sku);
 
-        $categoriesArray = $this->linkCategoryIdToCategoryObject($categories);
         $extensionAttributes = $product->getExtensionAttributes();
         $currentCategoryLinks = $extensionAttributes->getCategoryLinks();
-        $links = [];
+        $categoriesArray = $this->linkCategoryIdToCategoryObject($categories);
 
         foreach ($categoriesArray['link'] as $categoryId => $category) {
             $position = $category->getPosition();
-
-            if ($position === null) {
-                $position = 0;
-
-                if ($currentCategoryLinks !== null) {
-                    foreach ($currentCategoryLinks as $currentCategoryLink) {
-                        if ((int) $currentCategoryLink->getCategoryId() === $categoryId) {
-                            $position = $currentCategoryLink->getPosition();
-
-                            break;
+            $found = false;
+            if ($currentCategoryLinks !== null) {
+                foreach ($currentCategoryLinks as $currentCategoryLink) {
+                    if ((int) $currentCategoryLink->getCategoryId() === $categoryId) {
+                        if ($position !== null) {
+                            $currentCategoryLink->setPosition($position);
                         }
+                        $found = true;
+                        break;
                     }
                 }
             }
 
-            $links[] = $this->categoryLinkInterfaceFactory->create()
+            if($position === null) {
+                $position = 0;
+            }
+
+            if (!$found) {
+                $currentCategoryLinks[] = $this->categoryLinkInterfaceFactory->create()
                     ->setPosition($position)
                     ->setCategoryId($categoryId);
+            }
         }
-
-        $product->setCategoryIds(array_keys($categoriesArray));
-        $extensionAttributes->setCategoryLinks($links);
-        $product->setExtensionAttributes($extensionAttributes);
-
-        try {
-            $productRepository->save($product);
-        } catch (Throwable $exception) {
-            throw new LocalizedException(
-                __('Cannot save product %1 categories: %2', $sku, $exception->getMessage()),
-                null,
-                ErrorCodesDirectory::CANNOT_NOT_SAVE_PRODUCT_CATEGORIES
-            );
-        }
+        $this->saveProduct(
+            $product,
+            $categoriesArray,
+            $extensionAttributes,
+            $currentCategoryLinks,
+            $productRepository,
+            $sku
+        );
 
         $errors = [];
 
@@ -168,9 +183,53 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     }
 
     /**
-     * @param array $categories
+     * @param string $sku
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
      *
-     * @return array
+     * @return string[]
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function deleteCategoryAssignement(string $sku, array $categories): array
+    {
+        /** @var ProductRepositoryInterface $productRepository */
+        $productRepository = $this->productRepositoryFactory->create();
+        $product = $this->getProduct($productRepository, $sku);
+
+        $extensionAttributes = $product->getExtensionAttributes();
+        $currentCategoryLinks = $extensionAttributes->getCategoryLinks();
+        $categoriesArray = $this->linkCategoryIdToCategoryObject($categories);
+
+        foreach ($categoriesArray['link'] as $categoryId => $category) {
+            if ($currentCategoryLinks !== null) {
+                foreach ($currentCategoryLinks as $key => $currentCategoryLink) {
+                    if ((int) $currentCategoryLink->getCategoryId() === $categoryId) {
+                        unset($currentCategoryLinks[$key]);
+                        unset($categoriesArray['link'][$categoryId]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        $this->saveProduct(
+            $product,
+            $categoriesArray,
+            $extensionAttributes,
+            $currentCategoryLinks,
+            $productRepository,
+            $sku
+        );
+
+        return [];
+    }
+
+
+
+    /**
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
+     *
+     * @return string[]
      */
     private function getCategoryUniqueIds(array $categories): array
     {
@@ -183,22 +242,23 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
     }
 
     /**
-     * @param array $categories
+     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $newCategories
      *
-     * @return array
+     * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function linkCategoryIdToCategoryObject(array $categories): array
+    private function linkCategoryIdToCategoryObject(array $newCategories): array
     {
+
         $categoryCollection = $this->categoryCollectionFactory->create();
         $categoryCollection->addAttributeToFilter(
             CategoryPimUniqueId::CATEGORY_PIM_UNIQUE_ID,
-            ['in' => $this->getCategoryUniqueIds($categories)]
+            ['in' => $this->getCategoryUniqueIds($newCategories)]
         );
 
         $categoriesArray = ['link' => [], 'unlink' => []];
 
-        foreach ($categories as $importCategory) {
+        foreach ($newCategories as $importCategory) {
             $found = false;
 
             foreach ($categoryCollection as $category) {
@@ -217,5 +277,62 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
         }
 
         return $categoriesArray;
+    }
+
+    /**
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param array $categoriesArray
+     * @param \Magento\Catalog\Api\Data\ProductExtensionInterface|null $extensionAttributes
+     * @param $currentCategoryLinks
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param string $sku
+     * @throws LocalizedException
+     */
+    private function saveProduct(
+        ProductInterface $product,
+        array $categoriesArray,
+        ?ProductExtensionInterface $extensionAttributes,
+        $currentCategoryLinks,
+        ProductRepositoryInterface $productRepository,
+        string $sku
+    ): void {
+        $product->setCategoryIds(array_keys($categoriesArray));
+        $extensionAttributes->setCategoryLinks($currentCategoryLinks);
+        $product->setExtensionAttributes($extensionAttributes);
+
+        try {
+            $productRepository->save($product);
+        } catch (Throwable $exception) {
+            throw new LocalizedException(
+                __('Cannot save product %1 categories. %2' . $exception->getMessage(), $sku),
+                null,
+                ErrorCodesDirectory::CANNOT_NOT_SAVE_PRODUCT_CATEGORIES
+            );
+        }
+    }
+
+    /**
+     * @param ProductRepositoryInterface $productRepository
+     * @param string $sku
+     * @return ProductInterface
+     * @throws LocalizedException
+     */
+    private function getProduct(ProductRepositoryInterface $productRepository, string $sku): ProductInterface
+    {
+        try {
+            // Clean both stock registry and product repository cache to force a reload.
+            // This Fixes a rare bug if another extension loaded wrong data in them.
+            $this->stockRegistryStorage->clean();
+            $productRepository->cleanCache();
+            $product = $productRepository->get($sku, true, null, true);
+
+        } catch (NoSuchEntityException $exception) {
+            throw new LocalizedException(
+                __('The sku %1 does not exist', $sku),
+                $exception,
+                ErrorCodesDirectory::SKU_NOT_FOUND
+            );
+        }
+        return $product;
     }
 }

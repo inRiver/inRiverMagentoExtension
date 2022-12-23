@@ -57,6 +57,17 @@ class InriverProductImportPlugin
             $rowData['status'] = Status::STATUS_DISABLED;
         }
 
+        if (
+            !isset($rowData[\Magento\CatalogImportExport\Model\Import\Product::URL_KEY]) ||
+            $rowData[\Magento\CatalogImportExport\Model\Import\Product::URL_KEY] === ''
+        ) {
+            $newUrl = $this->inriverImportHelper->getUniqueProductUrl($rowData);
+
+            if ($newUrl !== '') {
+                $rowData[\Magento\CatalogImportExport\Model\Import\Product::URL_KEY] = $newUrl;
+            }
+        }
+
         return [$rowData, $rowNum];
     }
 

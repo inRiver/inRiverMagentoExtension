@@ -56,6 +56,12 @@
             <resource ref="Inriver_Adapter::write"/>
         </resources>
     </route>
+    <route method="POST" url="/V1/inriver-adapter/products/delete-category-assignments">
+        <service class="Inriver\Adapter\Api\ProductCategoriesInterface" method="delete"/>
+        <resources>
+            <resource ref="Inriver_Adapter::write"/>
+        </resources>
+    </route>
     <route method="GET" url="/V1/inriver-adapter/allskuswithtype">
         <service class="Inriver\Adapter\Api\SkusListInterface" method="getAllSkusWithType"/>
         <resources>
