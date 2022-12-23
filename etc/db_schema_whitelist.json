@@ -1,0 +1,50 @@
+{
+    "inriver_importexport_importdata": {
+        "column": {
+            "id": true,
+            "entity": true,
+            "behavior": true,
+            "data": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "inriver_async_callback": {
+        "column": {
+            "callback_id": true,
+            "number_of_operations": true,
+            "inriver_notified": true,
+            "bulk_uuid": true,
+            "topic": true,
+            "callback_url": true
+        },
+        "constraint": {
+            "INRIVER_ASYNC_CALLBACK_BULK_UUID_MAGENTO_BULK_UUID": true,
+            "INRIVER_ASYNC_CALLBACK_BULK_UUID": true,
+            "PRIMARY": true
+        }
+    },
+    "inriver_async_callback_operation": {
+        "column": {
+            "callback_operation_id": true,
+            "callback_id": true,
+            "error_count": true,
+            "messages": true
+        },
+        "constraint": {
+            "FK_DA6F6758941FD660CA245865DAC3418E": true,
+            "PRIMARY": true
+        }
+    },
+    "catalog_product_entity_media_gallery_value_inriver": {
+        "column": {
+            "value_id": true,
+            "image_id": true
+        },
+        "constraint": {
+            "FK_F3D3AC63793CC40C0AF6C908C44FD51F": true,
+            "CAT_PRD_ENTT_MDA_GLR_VAL_INRIVER_VAL_ID_IMAGE_ID": true
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "inriver/magento-adapter",
+  "description": "InRiver Adapter for Magento",
+  "version": "24.7.0",
+  "require": {
+    "php": ">=7.4 <8.2.0",
+    "magento/module-asynchronous-operations": ">=100.4"
+  },
+  "type": "magento2-module",
+  "license": "proprietary",
+  "minimum-stability": "dev",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Inriver\\Adapter\\": ""
+    }
+  },
+  "authors": [
+    {
+      "name": "inriver",
+      "email": "inriveradapters@inriver.com",
+      "role": "Developer"
+    }
+  ]
+}

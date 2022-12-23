@@ -1,0 +1,18 @@
+diff --git a/vendor/magento/module-catalog-url-rewrite/Model/ResourceModel/Category/Product.php b/vendor/magento/module-catalog-url-rewrite/Model/ResourceModel/Category/Product.php
+--- a/vendor/magento/module-catalog-url-rewrite/Model/ResourceModel/Category/Product.php	
++++ b/vendor/magento/module-catalog-url-rewrite/Model/ResourceModel/Category/Product.php
+@@ -53,12 +53,12 @@
+     {
+         $connection = $this->getConnection();
+         if (count($insertData) <= self::CHUNK_SIZE) {
+-            return $connection->insertMultiple($this->getTable(self::TABLE_NAME), $insertData);
++            return $connection->insertOnDuplicate($this->getTable(self::TABLE_NAME), $insertData);
+         }
+         $data = array_chunk($insertData, self::CHUNK_SIZE);
+         $totalCount = 0;
+         foreach ($data as $insertData) {
+-            $totalCount += $connection->insertMultiple($this->getTable(self::TABLE_NAME), $insertData);
++            $totalCount += $connection->insertOnDuplicate($this->getTable(self::TABLE_NAME), $insertData);
+         }
+         return $totalCount;
+     }

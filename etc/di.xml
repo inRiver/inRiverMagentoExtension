@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    InRiver <inriveradapters@inriver.com>
+ * @copyright Copyright (c) InRiver (https://www.inriver.com/)
+ * @link      https://www.inriver.com/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Inriver\Adapter\Api\VersionsInterface" type="Inriver\Adapter\Model\Versions"/>
+    <preference for="Inriver\Adapter\Api\TestCallbackInterface" type="Inriver\Adapter\Model\TestCallback"/>
+    <preference for="Inriver\Adapter\Api\SkusListInterface" type="Inriver\Adapter\Model\SkusList"/>
+    <preference for="Inriver\Adapter\Api\ErrorCodesInterface" type="Inriver\Adapter\Model\ErrorCodes"/>
+    <preference for="Inriver\Adapter\Api\Data\AppVersionsInterface" type="Inriver\Adapter\Model\Data\AppVersions"/>
+    <preference for="Inriver\Adapter\Api\Data\ValidationMessageInterface" type="Inriver\Adapter\Model\Data\ValidationMessage"/>
+
+    <preference for="Inriver\Adapter\Api\ImagesInterface" type="Inriver\Adapter\Model\Operation\ProductImagesOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface" type="Inriver\Adapter\Model\Data\ProductImages"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface" type="Inriver\Adapter\Model\Data\ProductImages\Image"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface\AttributesInterface" type="Inriver\Adapter\Model\Data\ProductImages\Images\Attributes"/>
+    <preference for="Inriver\Adapter\Api\CategoryManagementInterface" type="Inriver\Adapter\Model\Operation\CategoryManagementOperation"/>
+
+    <preference for="Inriver\Adapter\Api\ProductCategoriesInterface" type="Inriver\Adapter\Model\Operation\ProductCategoriesOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface" type="Inriver\Adapter\Model\Data\ProductCategories"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface" type="Inriver\Adapter\Model\Data\ProductCategories\Category"/>
+
+    <preference for="Inriver\Adapter\Api\ProductsImportInterface" type="Inriver\Adapter\Model\Operation\CsvImportByUrlOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\ProductsImportRequestInterface" type="Inriver\Adapter\Model\Data\ProductsImportRequest"/>
+    <preference for="Magento\ImportExport\Model\Import" type="Inriver\Adapter\Model\ImportExport\Import" />
+
+    <preference for="Inriver\Adapter\Api\Data\CategoriesImportInterface" type="Inriver\Adapter\Model\Data\CategoriesImport"/>
+
+    <preference for="Inriver\Adapter\Api\ProductsImportRelationsInterface" type="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation"/>
+
+    <preference for="Inriver\Adapter\Api\ProductAttributeOptionsInterface" type="Inriver\Adapter\Model\Operation\AttributeOptionsOperation"/>
+    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute"/>
+    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option"/>
+    <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option\Values"/>
+
+
+    <preference for="Inriver\Adapter\Api\AttributeInterface" type="Inriver\Adapter\Model\Attribute"/>
+    <preference for="Inriver\Adapter\Api\Data\AttributeSetInterface" type="Inriver\Adapter\Model\Data\AttributeSet"/>
+
+    <preference for="Inriver\Adapter\Api\Data\CallbackInterface" type="Inriver\Adapter\Model\Data\Callback"/>
+    <preference for="Inriver\Adapter\Api\Data\CallbackOperationInterface" type="Inriver\Adapter\Model\Data\CallbackOperation"/>
+    <preference for="Inriver\Adapter\Api\CallbackRepositoryInterface" type="Inriver\Adapter\Model\CallbackRepository" />
+    <preference for="Inriver\Adapter\Api\CallbackOperationRepositoryInterface" type="Inriver\Adapter\Model\CallbackOperationRepository" />
+
+    <preference for="Inriver\Adapter\Api\Data\InriverMediaGalleryDataInterface" type="Inriver\Adapter\Model\Data\InriverMediaGalleryData"/>
+    <preference for="Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface" type="Inriver\Adapter\Model\InriverMediaGalleryDataRepository"/>
+
+    <preference for="Inriver\Adapter\Api\Data\OperationResultInterface" type="Inriver\Adapter\Model\Data\OperationResult"/>
+
+    <preference for="Inriver\Adapter\Api\Data\ErrorCodeInterface" type="Inriver\Adapter\Model\Data\ErrorCode"/>
+
+    <preference for="Magento\BundleImportExport\Model\Import\Product\Type\Bundle" type="Inriver\Adapter\Model\Import\Product\Type\Bundle" />
+
+    <type name="Inriver\Adapter\Model\ImportExport\Import">
+        <plugin name="use_inriver_import_data" type="Inriver\Adapter\Plugin\UseInriverImportDataPlugin"/>
+    </type>
+
+    <type name="Inriver\Adapter\Model\ImportExport\Import\Config">
+        <plugin name="give_inriver_import_entity_product_config" type="Inriver\Adapter\Plugin\InriverImportConfigPlugin"/>
+    </type>
+
+    <type name="Inriver\Adapter\Model\ResourceModel\Import\Data">
+        <plugin name="inriver_import_data_plugin" type="Inriver\Adapter\Plugin\ImportDataPlugin"/>
+    </type>
+
+    <type name="Inriver\Adapter\Model\Import\Product">
+        <plugin name="inriver_import_product_plugin" type="Inriver\Adapter\Plugin\InriverProductImportPlugin"/>
+        <arguments>
+            <argument name="importData" xsi:type="object">Inriver\Adapter\Model\ResourceModel\Import\Data</argument>
+            <argument name="validator" xsi:type="object">Inriver\Adapter\Model\Import\Product\Validator</argument>
+            <argument name="importConfig" xsi:type="object">Inriver\Adapter\Model\ImportExport\Import\Config</argument>
+            <argument name="errorAggregator" xsi:type="object">Inriver\Adapter\Model\Import\ErrorProcessing\ProcessingErrorAggregator</argument>
+        </arguments>
+    </type>
+
+    <type name="Inriver\Adapter\Model\Import\Product\Validator">
+        <plugin name="inriver_import_product_validator_plugin" type="Inriver\Adapter\Plugin\InriverProductImportValidatorPlugin"/>
+    </type>
+
+    <type name="Magento\CatalogImportExport\Model\Import\Product\Type\AbstractType">
+        <plugin name="inriver_import_product_type_abstract_plugin" type="Inriver\Adapter\Plugin\InriverProductImportTypeAbstractPlugin"/>
+    </type>
+
+    <type name="Magento\AsynchronousOperations\Model\OperationManagement">
+        <plugin name="inriver_add_callback_logic" type="Inriver\Adapter\Plugin\AddCallbackLogicPlugin"/>
+    </type>
+
+    <type name="Inriver\Adapter\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+
+    <type name="Inriver\Adapter\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">inriver-adapter</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Inriver\Adapter\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\AsynchronousOperations\Model\MassSchedule">
+        <plugin name="MassSchedulePlugin"
+                type="Inriver\Adapter\Plugin\MassSchedulePlugin" sortOrder="10"/>
+    </type>
+    <virtualType name="Inriver\Adapter\Model\Import\Product\Type\Grouped" type="Magento\GroupedImportExport\Model\Import\Product\Type\Grouped">
+        <arguments>
+            <argument name="links" xsi:type="object">Inriver\Adapter\Model\Import\Product\Type\Grouped\Links</argument>
+        </arguments>
+    </virtualType>
+    <type name="Inriver\Adapter\Model\Import\Product\Type\Grouped\Links">
+        <plugin name="GroupedDeltaRelationImport"
+                type="Inriver\Adapter\Plugin\InriverProductImportTypeGroupedPluginLinks" sortOrder="10"/>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="inriver/import/inriver_api_key" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="cleanupCommand" xsi:type="object">Inriver\Adapter\Console\Command\CleanupCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="inriver" translate="label" sortOrder="110">
+            <label>inRiver</label>
+        </tab>
+        <section id="inriver" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>inRiver Configuration</label>
+            <tab>inriver</tab>
+            <resource>Inriver_Adapter::config</resource>
+            <group id="import" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Import</label>
+                <field id="debug" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Debug</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="behavior" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Behavior</label>
+                    <source_model>Inriver\Adapter\Model\Config\Source\Behavior</source_model>
+                </field>
+                <field id="inriver_api_key" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>inRiver api key</label>
+                    <comment>Key used to connect to the inRiver api</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="path_csv" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Csv directory path</label>
+                    <comment>Path where to download csv like 'inriver/import/csv'</comment>
+                </field>
+                <field id="maximum_allowed_error" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum allowed error in batch</label>
+                    <comment>The maximum allowed validation error in a batch before the import stop instead of skipping them</comment>
+                </field>
+                <field id="cleanup_days" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Archive Lifetime in days</label>
+                </field>
+                <field id="maximum_download_retry_attempt" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum download retry attempt</label>
+                    <comment>Product import file download</comment>
+                </field>
+                <field id="initial_download_retry_sleep" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Initial wait between retry in seconds </label>
+                    <comment>Will double each attempt (30/60/120...)</comment>
+                </field>
+                <field id="maximum_download_images_retry_attempt" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum download retry attempt for images</label>
+                    <comment>Image import file download</comment>
+                </field>
+                <field id="initial_download_images_retry_sleep" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Initial wait between retry in seconds for images</label>
+                    <comment>Will double each attempt (5/10/20...)</comment>
+		</field>
+                <field id="force_update_status_on_creation" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Allow update status on creation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If this setting is set to YES and a status is provided by inRiver, new product will be created by this status. If it is set to NO or no status are provided, new product will always be created as DISABLED.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

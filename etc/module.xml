@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    InRiver <inriveradapters@inriver.com>
+ * @copyright Copyright (c) InRiver (https://www.inriver.com/)
+ * @link      https://www.inriver.com/
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Inriver_Adapter" setup_version="24.7.0">
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_AsynchronousOperations"/>
+        </sequence>
+    </module>
+</config>
