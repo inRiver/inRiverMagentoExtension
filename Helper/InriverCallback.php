@@ -186,7 +186,7 @@ class InriverCallback
      */
     public function returnResponseToInriverAfterAsyncOperations(string $bulkUuid): void
     {
-        $apiKey = $this->scopeConfig->getValue(self::INRIVER_API_KEY);
+        $apiKey = $this->getApiKey();
 
         if ($apiKey !== null && $apiKey !== '') {
             try {
@@ -237,7 +237,7 @@ class InriverCallback
      *
      * @return \GuzzleHttp\Psr7\Response
      */
-    private function sendResponse(string $apiKey, string $url, string $message): Response
+    public function sendResponse(string $apiKey, string $url, string $message): Response
     {
         $params = [
             'headers' => [
@@ -294,5 +294,10 @@ class InriverCallback
         }
 
         return $messageEncoded;
+    }
+
+    public function getApiKey(): string
+    {
+        return $this->scopeConfig->getValue(self::INRIVER_API_KEY);
     }
 }

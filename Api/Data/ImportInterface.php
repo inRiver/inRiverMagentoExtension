@@ -18,6 +18,7 @@ interface ImportInterface
     public const XML_INRIVER_IMPORT_PATH_CSV = 'inriver/import/path_csv';
     public const XML_INRIVER_IMPORT_PATH_BEHAVIOR = 'inriver/import/behavior';
     public const XML_INRIVER_IMPORT_PATH_DEBUG = 'inriver/import/debug';
+    public const XML_INRIVER_MAX_ALLOWED_ERROR = 'inriver/import/maximum_allowed_error';
 
     /**
      * Execute import

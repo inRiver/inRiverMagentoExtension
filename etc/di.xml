@@ -9,12 +9,16 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Inriver\Adapter\Api\VersionsInterface"
                 type="Inriver\Adapter\Model\Versions"/>
+    <preference for="Inriver\Adapter\Api\TestCallbackInterface"
+                type="Inriver\Adapter\Model\TestCallback"/>
     <preference for="Inriver\Adapter\Api\SkusListInterface"
                 type="Inriver\Adapter\Model\SkusList"/>
     <preference for="Inriver\Adapter\Api\ErrorCodesInterface"
                 type="Inriver\Adapter\Model\ErrorCodes"/>
     <preference for="Inriver\Adapter\Api\Data\AppVersionsInterface"
                 type="Inriver\Adapter\Model\Data\AppVersions"/>
+    <preference for="Inriver\Adapter\Api\Data\ValidationMessageInterface"
+                type="Inriver\Adapter\Model\Data\ValidationMessage"/>
 
     <preference for="Inriver\Adapter\Api\ImagesInterface"
                 type="Inriver\Adapter\Model\Operation\ProductImagesOperation"/>
@@ -92,6 +96,7 @@
             <argument name="importData" xsi:type="object">Inriver\Adapter\Model\ResourceModel\Import\Data</argument>
             <argument name="validator" xsi:type="object">Inriver\Adapter\Model\Import\Product\Validator</argument>
             <argument name="importConfig" xsi:type="object">Inriver\Adapter\Model\ImportExport\Import\Config</argument>
+            <argument name="errorAggregator" xsi:type="object">Inriver\Adapter\Model\Import\ErrorProcessing\ProcessingErrorAggregator</argument>
         </arguments>
     </type>
 
@@ -138,5 +143,12 @@
     <type name="Inriver\Adapter\Model\Import\Product\Type\Grouped\Links">
         <plugin name="GroupedDeltaRelationImport"
                 type="Inriver\Adapter\Plugin\InriverProductImportTypeGroupedPluginLinks" sortOrder="10"/>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="inriver/import/inriver_api_key" xsi:type="string">1</item>
+            </argument>
+        </arguments>
     </type>
 </config>

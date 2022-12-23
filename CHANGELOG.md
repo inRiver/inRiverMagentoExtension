@@ -1,3 +1,9 @@
+##Version 23.3.0
+- As an additional security layer, the configured inRiver API Key is now stored encrypted in the database in addition to being obscured in the admin panel.
+- WARNING: This introduces a breaking change in the configuration. You must re-enter the API Key in order to encrypt it, as the system now assumes an encrypted key.
+- Add functionality to skip errors and continue import when there is validation error in the import.
+- Added a new setting to specify the amount of validation error allowed before stopping all the import. Set to 999999 by default.
+
 ##Version 23.2.0
 - Better error message when an attribute option value is invalid.
 - Continue processing other option value if one is invalid

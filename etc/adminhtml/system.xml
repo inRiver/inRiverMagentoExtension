@@ -21,10 +21,15 @@
                 <field id="inriver_api_key" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>inRiver api key</label>
                     <comment>Key used to connect to the inRiver api</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="path_csv" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Csv directory path</label>
                     <comment>Path where to download csv like 'inriver/import/csv'</comment>
+                </field>
+                <field id="maximum_allowed_error" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum allowed error in batch</label>
+                    <comment>The maximum allowed validation error in a batch before the import stop instead of skipping them</comment>
                 </field>
             </group>
         </section>
