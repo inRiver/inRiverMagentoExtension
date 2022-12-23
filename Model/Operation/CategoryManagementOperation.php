@@ -72,8 +72,8 @@ class CategoryManagementOperation implements CategoryManagementInterface
         try {
             $model->move($parentId, $afterId);
         } catch (\Exception $e) {
-            $message =  __('Could not move category: %1', $e->getMessage());
-            $this->logger->addError($message);
+            $message = __('Could not move category: %1', $e->getMessage());
+            $this->logger->error($message);
             throw new \Magento\Framework\Exception\LocalizedException(__('Could not move category: %1', $e->getMessage()), $e);
         }
         return true;

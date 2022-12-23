@@ -15,5 +15,4 @@ namespace Inriver\Adapter\Logger;
  */
 class Logger extends \Monolog\Logger
 {
-
 }

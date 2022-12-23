@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Model\Data;
 
-use Inriver\Adapter\Api\Data\AppVersionsInterface;
 use Inriver\Adapter\Api\Data\ValidationMessageInterface;
-use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\Module\ModuleListInterface;
 
 /**
  * Class AppVersions

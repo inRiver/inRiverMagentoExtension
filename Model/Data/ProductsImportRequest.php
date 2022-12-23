@@ -90,7 +90,7 @@ class ProductsImportRequest implements ProductsImportRequestInterface
      */
     public function setManagedWebsites(?array $website): ProductsImportRequestInterface
     {
-        if($website !== null) {
+        if ($website !== null) {
             $this->managedWebsite = $website;
         }
 

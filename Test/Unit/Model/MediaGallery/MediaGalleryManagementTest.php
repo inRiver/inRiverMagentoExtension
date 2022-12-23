@@ -205,29 +205,29 @@ class MediaGalleryManagementTest extends TestCase
 
     protected function setUp(): void
     {
-         $this->resourceConnection = $this->createMock(ResourceConnection::class);
-         $this->productRepository = $this->createMock(ProductRepository::class);
-         $this->metadataPool = $this->createMock(MetadataPool::class);
-         $this->action = $this->createMock(Action::class);
-         $this->resourceModel = $this->createMock(Gallery::class);
-         $this->galleryManagement = $this->createMock(ProductAttributeMediaGalleryManagementInterface::class);
+        $this->resourceConnection = $this->createMock(ResourceConnection::class);
+        $this->productRepository = $this->createMock(ProductRepository::class);
+        $this->metadataPool = $this->createMock(MetadataPool::class);
+        $this->action = $this->createMock(Action::class);
+        $this->resourceModel = $this->createMock(Gallery::class);
+        $this->galleryManagement = $this->createMock(ProductAttributeMediaGalleryManagementInterface::class);
 
-         $this->metadataPool
+        $this->metadataPool
              ->method('getMetadata')
              ->willReturn($this->createMock(EntityMetadataInterface::class));
 
-         $select = $this->createMock(Select::class);
-         $select->method('from')->willReturnSelf();
-         $select->method('where')->willReturnSelf();
-         $select->method('limit')->willReturnSelf();
+        $select = $this->createMock(Select::class);
+        $select->method('from')->willReturnSelf();
+        $select->method('where')->willReturnSelf();
+        $select->method('limit')->willReturnSelf();
 
-         $adapter = $this->createMock(AdapterInterface::class);
-         $adapter->method('select')->willReturn($select);
-         $adapter->method('fetchOne')->willReturn('string');
-         $adapter->method('fetchAssoc')->willReturn([]);
-         $adapter->method('fetchCol')->willReturn([]);
+        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter->method('select')->willReturn($select);
+        $adapter->method('fetchOne')->willReturn('string');
+        $adapter->method('fetchAssoc')->willReturn([]);
+        $adapter->method('fetchCol')->willReturn([]);
 
-         $this->resourceConnection->method('getConnection')->willReturn($adapter);
+        $this->resourceConnection->method('getConnection')->willReturn($adapter);
     }
 
     private function getSubject(): MediaGalleryManagement

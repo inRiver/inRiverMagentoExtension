@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Inriver\Adapter\Test\Unit\Helper;
 
 use Inriver\Adapter\Helper\FileEncoding;
-use Magento\Framework\Filesystem\Directory\ReadInterface;
 use Magento\Framework\Filesystem\Driver\File as FileDriver;
 use PHPUnit\Framework\TestCase;
 

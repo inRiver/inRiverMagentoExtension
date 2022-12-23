@@ -17,5 +17,4 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class EmptyImportException extends LocalizedException
 {
-
 }

@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Inriver\Adapter\Model\Import\ErrorProcessing;
 
 use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingError;
-use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregatorInterface;
 use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregator as BaseProcessingErrorAggregator;
+use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregatorInterface;
 
 /**
  * Import/Export Error Aggregator class

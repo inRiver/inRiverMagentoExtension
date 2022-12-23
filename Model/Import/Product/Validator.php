@@ -17,5 +17,4 @@ use Magento\CatalogImportExport\Model\Import\Product\Validator as ProductValidat
  */
 class Validator extends ProductValidator
 {
-
 }

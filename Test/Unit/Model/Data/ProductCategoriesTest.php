@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 class ProductCategoriesTest extends TestCase
 {
-
     private const SOME_SKU = 'someSku';
 
     public function testSetImages(): void

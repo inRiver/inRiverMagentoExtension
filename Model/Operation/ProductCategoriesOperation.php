@@ -87,11 +87,11 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     public function post(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array
     {
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Started Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
-        $result =  $this->processProduct($productCategories->getSku(), $productCategories->getCategories());
-        $this->logger->addInfo(
+        $result = $this->processProduct($productCategories->getSku(), $productCategories->getCategories());
+        $this->logger->info(
             __('Finished  Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
         return $result;
@@ -109,11 +109,11 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     public function delete(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array
     {
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Started Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
-        $result =  $this->deleteCategoryAssignement($productCategories->getSku(), $productCategories->getCategories());
-        $this->logger->addInfo(
+        $result = $this->deleteCategoryAssignement($productCategories->getSku(), $productCategories->getCategories());
+        $this->logger->info(
             __('Finished  Product Category Assignement Operation for sku: %1', $productCategories->getSku())
         );
         return $result;
@@ -151,7 +151,7 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
                 }
             }
 
-            if($position === null) {
+            if ($position === null) {
                 $position = 0;
             }
 
@@ -223,8 +223,6 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
         return [];
     }
 
-
-
     /**
      * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface\CategoryInterface[] $categories
      *
@@ -248,7 +246,6 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
      */
     private function linkCategoryIdToCategoryObject(array $newCategories): array
     {
-
         $categoryCollection = $this->categoryCollectionFactory->create();
         $categoryCollection->addAttributeToFilter(
             CategoryPimUniqueId::CATEGORY_PIM_UNIQUE_ID,
@@ -324,7 +321,6 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
             $this->stockRegistryStorage->clean();
             $productRepository->cleanCache();
             $product = $productRepository->get($sku, true, null, true);
-
         } catch (NoSuchEntityException $exception) {
             throw new LocalizedException(
                 __('The sku %1 does not exist', $sku),

@@ -100,7 +100,6 @@ class InriverCallback
         ?string $message = null,
         $resultData = null
     ): void {
-
         try {
             //No operation are created for call that don't have the callback header
             $callbackOperation = $this->callbackOperationRepository->getByOperationId($operationId);
@@ -155,8 +154,7 @@ class InriverCallback
                 } catch (Exception $e) {
                     $empty = false;
                     $messageArray['additional_messages'] = [
-                        'Message' =>
-                            'An error occured while deserializing $resultData, see Magento log for more information',
+                        'Message' => 'An error occured while deserializing $resultData, see Magento log for more information',
                         'Exception' => $e->getMessage()
                     ];
                     $this->logger->log(
@@ -202,7 +200,10 @@ class InriverCallback
             if ($callbackId !== null) {
                 $callbackOperations = $this->callbackOperationRepository->getListByCallbackId($callbackId)->getItems();
 
-                if (count($callbackOperations) === $callback->getNumberOfOperations()) {
+                $countOperation = count($callbackOperations);
+                $totalOperation = $callback->getNumberOfOperations();
+                $this->logger->info("Operation Count $countOperation vs $totalOperation");
+                if ($countOperation === $totalOperation) {
                     $response = $this->sendResponse(
                         $apiKey,
                         $callback->getCallBackUrl(),

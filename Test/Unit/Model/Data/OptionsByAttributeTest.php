@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 class OptionsByAttributeTest extends TestCase
 {
-
     public function testSetAttributes(): void
     {
         $arrayOfStrings = [

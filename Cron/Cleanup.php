@@ -35,13 +35,14 @@ class Cleanup
      * @param \Magento\Framework\Filesystem\DirectoryList $directoryList
      * @param \Magento\Framework\Filesystem\Driver\File $driverFile
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Framework\Stdlib\DateTime $dateTime
      * @param \Inriver\Adapter\Logger\Logger $logger
      */
-    public function __construct(DirectoryList        $directoryList,
-                                File                 $driverFile,
-                                ScopeConfigInterface $scopeConfig,
-                                Logger               $logger)
+    public function __construct(
+        DirectoryList        $directoryList,
+        File                 $driverFile,
+        ScopeConfigInterface $scopeConfig,
+        Logger               $logger
+    )
     {
         $this->directoryList = $directoryList;
         $this->driverFile = $driverFile;
@@ -54,12 +55,11 @@ class Cleanup
         $DS = DIRECTORY_SEPARATOR;
         $rootFolder = $this->directoryList->getPath('var') .
             $DS . $this->scopeConfig->getValue(Import::XML_INRIVER_IMPORT_PATH_CSV) .
-            $DS . 'archives';
-        $this->cleanFolder($rootFolder . $DS . 'success');
-        $this->cleanFolder($rootFolder . $DS . 'error');
+            $DS . Import::ARCHIVES_FOLDER;
+        $this->cleanFolder($rootFolder . $DS . Import::SUCCESS_FOLDER);
+        $this->cleanFolder($rootFolder . $DS . Import::ERRORS_FOLDER);
 
         return $this;
-
     }
 
     public function cleanFolder($folderPath)
@@ -77,12 +77,11 @@ class Cleanup
                         $this->driverFile->deleteFile($filepath);
                     }
                 } catch (\Exception $ex) {
-                    $this->logger->addError("Cannot delete file $filepath during cleanup : " . $ex->getMessage());
+                    $this->logger->error("Cannot delete file $filepath during cleanup : " . $ex->getMessage());
                 }
             }
         } catch (\Exception $ex) {
-            $this->logger->addError("Cannot read directory $folderPath during cleanup : " . $ex->getMessage());
+            $this->logger->error("Cannot read directory $folderPath during cleanup : " . $ex->getMessage());
         }
     }
 }
-

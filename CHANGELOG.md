@@ -1,3 +1,6 @@
+##Version 23.4.5
+- Fix the cleanup cron for "errors" folder
+
 ##Version 23.4.4
 - Fix code to allow virtual product
 - Fix to product import to keep website associated to a product that is not managed by the adapter

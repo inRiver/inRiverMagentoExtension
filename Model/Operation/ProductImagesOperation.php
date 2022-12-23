@@ -133,11 +133,11 @@ class ProductImagesOperation implements ImagesInterface
      */
     public function post(ProductImagesInterface $productImage): array
     {
-        $this->logger->addInfo(
+        $this->logger->info(
             __('Starting Product Images Operation for sku: %1', $productImage->getSku())
         );
-        $result =  $this->syncProductImages($productImage->getSku(), $productImage->getImages());
-        $this->logger->addInfo(
+        $result = $this->syncProductImages($productImage->getSku(), $productImage->getImages());
+        $this->logger->info(
             __('Finished Product Images Operation for sku: %1', $productImage->getSku())
         );
         return $result;

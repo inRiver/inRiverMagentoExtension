@@ -77,11 +77,11 @@ class ImportDataPlugin
         try {
             return $proceed($code);
         } /** @noinspection PhpRedundantCatchClauseInspection */ catch (LocalizedException $ex) {
-                throw new EmptyImportException(
-                    __($ex->getMessage()),
-                    $ex,
-                    $ex->getCode()
-                );
+            throw new EmptyImportException(
+                __($ex->getMessage()),
+                $ex,
+                $ex->getCode()
+            );
         }
     }
 

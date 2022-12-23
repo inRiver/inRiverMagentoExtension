@@ -19,5 +19,4 @@ use Magento\ImportExport\Model\Import\Config as ParentConfig;
  */
 class Config extends ParentConfig
 {
-
 }

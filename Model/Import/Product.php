@@ -57,8 +57,7 @@ class Product extends ProductImport
         $errorMessage = null,
         $errorLevel = ProcessingError::ERROR_LEVEL_CRITICAL,
         $errorDescription = null
-    ): ProductImport
-    {
+    ): ProductImport {
         if ($errorCode === ValidatorInterface::ERROR_MEDIA_URL_NOT_ACCESSIBLE && $this->isDebug()) {
             return $this;
         }
@@ -131,7 +130,6 @@ class Product extends ProductImport
             }
             if (count($delProductId) > 0) {
                 $this->_connection->delete($tableName, $whereClause);
-
             }
         }
 
@@ -143,8 +141,7 @@ class Product extends ProductImport
      *
      * @return bool
      */
-    private
-    function isDebug(): bool
+    private function isDebug(): bool
     {
         $debug = $this->scopeConfig->getValue(self::IS_DEBUG_MODE);
 

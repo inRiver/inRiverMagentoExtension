@@ -31,7 +31,6 @@ interface ProductsImportRequestInterface
      */
     public function setUrl(string $url): ProductsImportRequestInterface;
 
-
     /**
      * List of website code managed by the current adapter
      *
