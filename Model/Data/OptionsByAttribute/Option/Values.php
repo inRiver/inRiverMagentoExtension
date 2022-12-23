@@ -26,6 +26,9 @@ class Values implements ValuesInterface
     /** @var string */
     protected $value;
 
+    /** @var string */
+    protected $description;
+
     /**
      * Get store view code
      *
@@ -75,6 +78,30 @@ class Values implements ValuesInterface
     public function setValue(string $value): ValuesInterface
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string|null $description
+     *
+     * @return \Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface
+     */
+    public function setDescription(?string $description): ValuesInterface
+    {
+        $this->description = $description;
 
         return $this;
     }

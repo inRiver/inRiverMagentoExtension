@@ -46,4 +46,19 @@ interface ValuesInterface
      * @return \Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface
      */
     public function setValue(string $value): ValuesInterface;
+
+    /**
+     * Get value
+     *
+     * @return string|null
+     */
+    public function getDescription(): ?string;
+
+    /**
+     * Set value
+     *
+     * @param string $description
+     * @return \Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface
+     */
+    public function setDescription(?string $description): ValuesInterface;
 }

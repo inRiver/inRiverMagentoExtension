@@ -15,6 +15,7 @@ use Inriver\Adapter\Api\Data\OptionsByAttributeInterface;
 use Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Model\Entity\Attribute\OptionManagementExtended;
+use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Api\AttributeRepositoryInterface;
 use Magento\Eav\Api\Data\AttributeInterface;
@@ -29,7 +30,9 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Phrase;
+use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Swatches\Helper\Data;
 
 use function __;
 use function array_key_exists;
@@ -54,9 +57,6 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
     /** @var \Magento\Framework\Filesystem */
     protected $filesystem;
 
-    /** @var \Inriver\Adapter\Helper\FileEncoding */
-    protected $fileEncoding;
-
     /** @var \Magento\Eav\Api\AttributeRepositoryInterface */
     protected $attributeRepository;
 
@@ -70,7 +70,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
     protected $attributeOptionLabelFactory;
 
     /** @var \Magento\Store\Model\StoreManagerInterface */
-    protected $storeManger;
+    protected $storeManager;
 
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option */
     protected $option;
@@ -78,7 +78,8 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory */
     protected $attributeOptionCollectionFactory;
 
-    //phpcs:ignoreFile Generic.Files.LineLength.Too.Long
+    /** @var \Magento\Swatches\Helper\Data */
+    private $swatchHelper;
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -86,9 +87,11 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      * @param \Inriver\Adapter\Model\Entity\Attribute\OptionManagementExtended $attributeOptionManagement
      * @param \Magento\Eav\Api\Data\AttributeOptionInterfaceFactory $attributeOptionFactory
      * @param \Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory $attributeOptionLabelFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManger
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option $option
-     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory $attributeOptionCollectionFactory
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory
+     *        $attributeOptionCollectionFactory
+     * @param \Magento\Swatches\Helper\Data $swatchHelper
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -96,18 +99,20 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         OptionManagementExtended $attributeOptionManagement,
         AttributeOptionInterfaceFactory $attributeOptionFactory,
         AttributeOptionLabelInterfaceFactory $attributeOptionLabelFactory,
-        StoreManagerInterface $storeManger,
+        StoreManagerInterface $storeManager,
         Option $option,
-        CollectionFactory $attributeOptionCollectionFactory
+        CollectionFactory $attributeOptionCollectionFactory,
+        Data $swatchHelper
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->attributeRepository = $attributeRepository;
         $this->attributeOptionManagement = $attributeOptionManagement;
         $this->attributeOptionFactory = $attributeOptionFactory;
         $this->attributeOptionLabelFactory = $attributeOptionLabelFactory;
-        $this->storeManger = $storeManger;
+        $this->storeManager = $storeManager;
         $this->attributeOptionCollectionFactory = $attributeOptionCollectionFactory;
         $this->option = $option;
+        $this->swatchHelper = $swatchHelper;
     }
 
     /**
@@ -195,7 +200,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
             }
         }
 
-        if (count($attributeOptionErrors) >0) {
+        if (count($attributeOptionErrors) > 0) {
             $errorMessage = __('There were errors while importing attributes option values: ');
             $errorMessage .= implode(',', $attributeOptionErrors);
             throw new InputException(new Phrase($errorMessage));
@@ -215,10 +220,19 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         AttributeInterface $attribute,
         AttributeOption $currentOption,
         OptionInterface $updatedOption
-    ): void
-    {
-        $labels = $this->getStoreLabels($updatedOption);
+    ): void {
+
+        $isSwatch = $this->swatchHelper->isSwatchAttribute($attribute);
+        $labels = $this->getStoreLabels($updatedOption, $isSwatch, $currentOption, $attribute);
+
+        $currentOption->setLabel($updatedOption->getAdminValue());
         $currentOption->setStoreLabels($labels);
+
+        if ($isSwatch) {
+            //necessary for swatch to reload attribute. Fail to save swatch textbox on multiple option otherwise
+            $attribute = $this->initAttribute($attribute->getAttributeCode());
+            $this->setSwatchAttributeOption($attribute, $currentOption, $currentOption->getId());
+        }
 
         $this->attributeOptionManagement->update(
             (int)$attribute->getEntityTypeId(),
@@ -237,13 +251,22 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      */
     protected function createOption(AttributeInterface $attribute, OptionInterface $newOption): void
     {
-        $labels = $this->getStoreLabels($newOption);
+        $isSwatch = $this->swatchHelper->isSwatchAttribute($attribute);
+        $labels = $this->getStoreLabels($newOption, $isSwatch);
 
         $newAttributeOption = $this->attributeOptionFactory->create();
         $newAttributeOption->setLabel($newOption->getAdminValue());
+        $newAttributeOption->setValue($newOption->getAdminValue());
         $newAttributeOption->setStoreLabels($labels);
         $newAttributeOption->setSortOrder(0);
         $newAttributeOption->setIsDefault(false);
+
+        if ($isSwatch) {
+            //necessary for swatch to reload attribute. Fail to save swatch textbox on multiple option otherwise
+            $attribute = $this->initAttribute($attribute->getAttributeCode());
+            $newOptionId = $this->getNewOptionId($newAttributeOption);
+            $this->setSwatchAttributeOption($attribute, $newAttributeOption, $newOptionId);
+        }
 
         $this->attributeOptionManagement->add(
             $attribute->getEntityTypeId(),
@@ -254,23 +277,59 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
 
     /**
      * @param \Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface $newOption
-     *
-     * @return array
+     * @param bool $isSwatch
+     * @param \Magento\Eav\Model\Entity\Attribute\Option|null $currentOption
+     * @param \Magento\Eav\Api\Data\AttributeInterface|null $attribute
+     * @return string[]
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getStoreLabels(OptionInterface $newOption): array
-    {
+    protected function getStoreLabels(
+        OptionInterface $newOption,
+        bool $isSwatch = false,
+        AttributeOption $currentOption = null,
+        AttributeInterface $attribute = null
+    ): array {
         $labels = [];
-
         foreach ($newOption->getValues() as $value) {
-            $storeId = $this->storeManger->getStore($value->getStoreViewCode())->getId();
+            $storeId = $this->storeManager->getStore($value->getStoreViewCode())->getId();
 
             $label = $this->attributeOptionLabelFactory->create();
-            $label->setLabel($value->getValue());
             $label->setStoreId($storeId);
-            $labels[] = $label;
+            if ($isSwatch) {
+                if ($value->getDescription() !== null) {
+                    $label->setLabel($value->getDescription());
+                } else {
+                    if ($currentOption !== null && $attribute !== null) {
+                        $labelValue = $attribute
+                            ->setStoreId($storeId)
+                            ->getSource()
+                            ->getOptionText($currentOption->getId());
+                        $label->setLabel($labelValue);
+                        $attribute->setStoreId(0);
+                    }
+                }
+                $label->setData('swatchtext', $value->getValue());
+            } else {
+                $label->setLabel($value->getValue());
+            }
+            $labels[$storeId] = $label;
         }
 
+        if ($currentOption !== null && $attribute !== null) {
+            foreach ($this->storeManager->getStores() as $store) {
+                $storeId = $store->getId();
+                if (!array_key_exists($storeId, $labels)) {
+                    $label = $this->attributeOptionLabelFactory->create();
+                    $label->setStoreId($storeId);
+
+                    $labelValue = $attribute->setStoreId($storeId)->getSource()->getOptionText($currentOption->getId());
+                    $label->setLabel($labelValue);
+                    $labels[$storeId] = $label;
+                }
+            }
+
+            $attribute->setStoreId(0);
+        }
         return $labels;
     }
 
@@ -289,5 +348,65 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
             ->load();
 
         return $collection;
+    }
+
+    /**
+     * Set attribute swatch option
+     *
+     * @param \Magento\Eav\Api\Data\AttributeInterface $attribute
+     * @param \Magento\Eav\Model\Entity\Attribute\Option $option
+     * @param string $optionId
+     */
+    private function setSwatchAttributeOption(
+        AttributeInterface $attribute,
+        AttributeOption $option,
+        string $optionId
+    ): void {
+        $optionsValue = trim($option->getValue() ?: '');
+        if ($this->swatchHelper->isVisualSwatch($attribute)) {
+            if (strpos($optionsValue, "#") === 0) {
+                $attribute->setData('swatchvisual', ['value' => [$optionId => $optionsValue]]);
+            }
+        } else {
+            $options = [];
+            $options['value'][$optionId][Store::DEFAULT_STORE_ID] = $optionsValue;
+            foreach ($option->getStoreLabels() as $label) {
+                if ($label->getData('swatchtext') !== null) {
+                    $options['value'][$optionId][$label->getStoreId()] = $label->getData('swatchtext');
+                }
+            }
+            $attribute->setData('swatchtext', $options);
+        }
+    }
+
+    /**
+     * Get option id to create new option
+     *
+     * @param \Magento\Eav\Model\Entity\Attribute\Option $option
+     * @return string
+     */
+    private function getNewOptionId(AttributeOption $option): string
+    {
+        $optionId = trim($option->getLabel() ?: '');
+        if (empty($optionId)) {
+            $optionId = 'new_option';
+        }
+
+        return 'id_' . $optionId;
+    }
+
+    /**
+     * Init swatch attribute
+     *
+     * @param string $attributeCode
+     * @return \Magento\Eav\Api\Data\AttributeInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function initAttribute(string $attributeCode): AttributeInterface
+    {
+        return $this->attributeRepository->get(
+            ProductAttributeInterface::ENTITY_TYPE_CODE,
+            $attributeCode
+        );
     }
 }

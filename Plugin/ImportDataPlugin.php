@@ -72,7 +72,6 @@ class ImportDataPlugin
      * @noinspection PhpUnusedParameterInspection
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    // phpcs:ignore Absolunet.Functions.AroundPlugin.Found
     public function aroundGetUniqueColumnData(Data $subject, callable $proceed, string $code): string
     {
         try {
