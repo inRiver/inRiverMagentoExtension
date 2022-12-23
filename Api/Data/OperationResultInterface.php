@@ -31,7 +31,7 @@ interface OperationResultInterface
      */
     public function setErrorCode(string $errorCode): OperationResultInterface;
 
-    /**ùz
+    /**
      * Get column name
      *
      * @return string|null

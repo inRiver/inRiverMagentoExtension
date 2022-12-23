@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Helper;
 
+use Exception;
 use GuzzleHttp\Psr7\Response;
 use Inriver\Adapter\Api\CallbackOperationRepositoryInterface;
 use Inriver\Adapter\Api\CallbackRepositoryInterface;
@@ -139,13 +140,27 @@ class InriverCallback
                 $isNotComplete ||
                 strpos($callback->getTopic(), self::MAGENTO_CATEGORY_TOPIC) === false
             ) {
-                $data = $this->json->unserialize($resultData ?? '[]');
+                try {
+                    $data = $this->json->unserialize($resultData ?? '[]');
 
-                if ($data !== null && is_array($data) && count($data) > 0) {
+                    if ($data !== null && is_array($data) && count($data) > 0) {
+                        $empty = false;
+                        $messageArray['additional_messages'] = $data;
+                    } else {
+                        $messageArray['additional_messages'] = [];
+                    }
+                } catch (Exception $e) {
                     $empty = false;
-                    $messageArray['additional_messages'] = $data;
-                } else {
-                    $messageArray['additional_messages'] = [];
+                    $messageArray['additional_messages'] = [
+                        'Message' =>
+                            'An error occured while deserializing $resultData, see Magento log for more information',
+                        'Exception' => $e->getMessage()
+                    ];
+                    $this->logger->log(
+                        LogLevel::ERROR,
+                        'An error occured while deserializing $resultData: ' .
+                        $e->getMessage()
+                    );
                 }
             } else {
                 $messageArray['additional_messages'] = [];

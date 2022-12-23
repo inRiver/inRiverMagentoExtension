@@ -81,7 +81,8 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      * @param \Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory $attributeOptionLabelFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManger
      * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option $option
-     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory $attributeOptionCollectionFactory
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory
+     *        $attributeOptionCollectionFactory
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,

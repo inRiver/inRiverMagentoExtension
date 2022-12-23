@@ -1,3 +1,9 @@
+##Version 24.1.1
+- Fix Error while serializing result data to generate callback
+- Fix inRiver Callback to handle exception in the additional message validation and send it back to inRiver
+- Fix code Magento Coding Standards
+- Fix Sql Error in the handling of configurable relations
+
 ##Version 24.1.0
 - Added clear logs on the inRiver callback when the api key is empty or invalid
 
@@ -11,7 +17,6 @@ Updated magento version to 2.4.1
 
 - Added support for bundle products
 - Remove custom update function for product attribute option API call as Magento has now is own function
-
 
 ##Version 1.2.0
 

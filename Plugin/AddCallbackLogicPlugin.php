@@ -27,7 +27,8 @@ class AddCallbackLogicPlugin
 
     /**
      * @param \Inriver\Adapter\Helper\InriverCallback $inriverCallback
-     * @param \Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory $operationCollectionFactory
+     * @param \Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory
+     *        $operationCollectionFactory
      */
     public function __construct(
         InriverCallback $inriverCallback,
@@ -108,6 +109,7 @@ class AddCallbackLogicPlugin
      */
     private function getOperationIdByBulkUuidAndOperationKey(string $bulkUuid, int $operationKey): int
     {
+        /** @var \Magento\AsynchronousOperations\Model\ResourceModel\Operation\Collection $operation */
         $operation = $this->operationCollectionFactory->create()
             ->addFieldToFilter(self::BULK_UUID_COLUMN, $bulkUuid)
             ->addFieldToFilter(self::OPERATION_KEY_COLUMN, $operationKey)

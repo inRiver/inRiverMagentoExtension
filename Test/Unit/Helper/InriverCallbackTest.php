@@ -19,6 +19,7 @@ use Inriver\Adapter\Helper\InriverCallback;
 use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Model\Data\Callback;
 use Inriver\Adapter\Model\Data\CallbackOperation;
+use InvalidArgumentException;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Bulk\OperationInterface;
@@ -53,7 +54,7 @@ class InriverCallbackTest extends TestCase
     /** @var \Magento\Framework\App\Config\ScopeConfigInterface|\Inriver\Adapter\Test\Unit\Helper\MockObject */
     private $scopeConfig;
 
-    /** @var  \Inriver\Adapter\Logger\Logger|\Inriver\Adapter\Test\Unit\Helper\MockObject */
+    /** @var \Inriver\Adapter\Logger\Logger|\Inriver\Adapter\Test\Unit\Helper\MockObject */
     private $logger;
 
     public function testNoCallbackToHandle(): void
@@ -140,6 +141,38 @@ class InriverCallbackTest extends TestCase
             self::BULK_UUID,
             $status,
             $errorCode,
+            self::MESSAGE,
+            $resultData
+        );
+    }
+
+    /**
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function testCreateCallbackInvalidResultDataLogExceptionButReturnDataTo(): void
+    {
+        $resultData = ['error' => 'Error, resultData should be a json formatted string'];
+        $this->callback->method('getCallBackId')->willReturn(self::CALLBACK_ID);
+
+        $callbackOperation = $this->createMock(CallbackOperationInterface::class);
+        $this->callbackOperationRepository->method('getByOperationId')->willReturn($callbackOperation);
+
+        $this->callbackOperationRepository->expects($this->once())->method('save');
+
+        $exception = new InvalidArgumentException();
+        $this->json->method('unserialize')->willThrowException($exception);
+
+        $callbackOperation->expects($this->once())->method('setMessages');
+
+        $this->logger->expects($this->once())->method('log');
+
+        $this->getInriverCallback()->createCallbackOperationAfterAsyncOperations(
+            self::OPERATION_ID,
+            self::BULK_UUID,
+            OperationInterface::STATUS_TYPE_COMPLETE,
+            null,
             self::MESSAGE,
             $resultData
         );
@@ -244,7 +277,7 @@ class InriverCallbackTest extends TestCase
         $this->logger
             ->expects($this->once())
             ->method('log')
-            ->with('error',$this->stringContains('400'));
+            ->with('error', $this->stringContains('400'));
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->getInriverCallback()->returnResponseToInriverAfterAsyncOperations(

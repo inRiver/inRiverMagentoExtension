@@ -48,7 +48,9 @@ class InriverProductImportPlugin
             $subject->setIsImportTypeDisable($this->inriverImportHelper->isImportTypeDisable($rowData));
         }
 
-        if ($this->inriverImportHelper->isNewProductRowWithNoPrice($rowData) && $subject->isImportTypeDisable() === false) {
+        if ($this->inriverImportHelper->isNewProductRowWithNoPrice($rowData) &&
+            $subject->isImportTypeDisable() === false
+        ) {
             $rowData['price'] = 0.00;
             $rowData['status'] = Status::STATUS_DISABLED;
         }

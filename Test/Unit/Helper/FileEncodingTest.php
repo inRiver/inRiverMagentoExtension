@@ -15,7 +15,10 @@ use Magento\Framework\Filesystem\Driver\File as FileDriver;
 use PHPUnit\Framework\TestCase;
 
 use function copy;
+use function fclose;
 use function file_exists;
+use function fopen;
+use function rename;
 use function unlink;
 
 class FileEncodingTest extends TestCase
@@ -83,7 +86,7 @@ class FileEncodingTest extends TestCase
         $this->fileDriver
             ->method('fileOpen')
             ->willReturnCallback(
-                function($filePath, $mode) {
+                function ($filePath, $mode) {
                     return fopen($filePath, $mode);
                 }
             );
@@ -91,7 +94,7 @@ class FileEncodingTest extends TestCase
         $this->fileDriver
             ->method('fileClose')
             ->willReturnCallback(
-                function($file) {
+                function ($file) {
                     return fclose($file);
                 }
             );
@@ -99,7 +102,7 @@ class FileEncodingTest extends TestCase
         $this->fileDriver
             ->method('rename')
             ->willReturnCallback(
-                function($oldName, $newName) {
+                function ($oldName, $newName) {
                     return rename($oldName, $newName);
                 }
             );

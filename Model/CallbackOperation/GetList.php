@@ -32,7 +32,8 @@ class GetList
     private $collectionProcessor;
 
     /**
-     * @param \Inriver\Adapter\Model\ResourceModel\CallbackOperation\CollectionFactory $callbackOperationCollectionFactory
+     * @param \Inriver\Adapter\Model\ResourceModel\CallbackOperation\CollectionFactory
+     *        $callbackOperationCollectionFactory
      * @param \Magento\Framework\Api\SearchResultsInterfaceFactory $searchResultsFactory
      * @param \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface $collectionProcessor
      */

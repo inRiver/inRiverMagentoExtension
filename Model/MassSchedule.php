@@ -122,7 +122,7 @@ class MassSchedule extends \Magento\AsynchronousOperations\Model\MassSchedule
         if ($groupId === null) {
             $groupId = $this->identityService->generateId();
 
-            /** create new bulk without operations */
+            /* create new bulk without operations */
             if (!$this->bulkManagement->scheduleBulk($groupId, [], $bulkDescription, $userId)) {
                 throw new LocalizedException(
                     __('Something went wrong while processing the request.')
