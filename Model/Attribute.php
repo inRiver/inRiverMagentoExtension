@@ -55,7 +55,7 @@ class Attribute implements AttributeInterface
             ->AddFieldToFilter('entity_type_id', ['eq' => 4])
             ->AddFieldToSelect('*');
 
-        $results = array();
+        $results = [];
         foreach ($allAttributeSet->getItems() as $attributeset) {
             $attributeSetName = $attributeset->getAttributeSetName();
             $attributeSetId = $attributeset->getAttributeSetId();
@@ -78,7 +78,7 @@ class Attribute implements AttributeInterface
     {
         $productAttributes = $this->productAttributeManagement->getAttributes($attributeSetId);
 
-        $attributeNames = array();
+        $attributeNames = [];
         foreach ($productAttributes as $attribute) {
             $attributeNames[] = $attribute->getAttributeCode();
         }

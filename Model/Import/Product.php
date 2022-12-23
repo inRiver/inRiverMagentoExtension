@@ -118,10 +118,10 @@ class Product extends ProductImport
                 }
                 $whereClause = $this->_connection->quoteInto('product_id IN (?)', $delProductId);
 
-                $managedWebsites = $this->getParameters()["managed_websites"];
+                $parameters = $this->getParameters();
 
-                if ($managedWebsites !== '') {
-                    $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $managedWebsites);
+                if (isset($parameters['managed_websites']) && $parameters['managed_websites'] !== '') {
+                    $whereClause .= ' AND ' . $this->_connection->quoteInto('website_id IN (?)', $parameters['managed_websites']);
                 }
                 if (count($delProductId) > 0) {
                     $this->_connection->delete($tableName, $whereClause);

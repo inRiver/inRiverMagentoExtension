@@ -156,7 +156,7 @@ class CsvImportByUrlOperation implements ProductsImportInterface
     }
 
     /**
-     * @param array|null $managedWebsiteIds
+     * @param array|null $managedWebsites
      */
     private function getManagedWebsiteIds(?array $managedWebsites): string
     {

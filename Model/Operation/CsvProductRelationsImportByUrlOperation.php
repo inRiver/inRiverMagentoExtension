@@ -57,6 +57,7 @@ class CsvProductRelationsImportByUrlOperation extends CsvImportByUrlOperation im
 
     /**
      * @param string $path
+     * @param string $managedWebsiteIds
      *
      * @return string[]
      * @throws \Magento\Framework\Exception\LocalizedException

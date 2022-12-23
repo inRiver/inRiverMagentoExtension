@@ -17,6 +17,7 @@ class AttributeSet extends AbstractModel implements AttributeSetInterface
 {
     /** @var string */
     public $attributeSetName;
+
     /** @var string[] */
     public $attributes;
 
@@ -51,7 +52,6 @@ class AttributeSet extends AbstractModel implements AttributeSetInterface
 
         return $this;
     }
-
 
     /**
      * @return string[]

@@ -1,3 +1,6 @@
+##Version 24.6.1
+- Fix Warning: Undefined array key "managed_websites"
+
 ##Version 24.6.0
 - Added new endpoint for the 1.8.0 version of the inRiver Adapter
  
