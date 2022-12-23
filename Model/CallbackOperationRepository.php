@@ -90,8 +90,8 @@ class CallbackOperationRepository implements CallbackOperationRepositoryInterfac
             $this->callbackOperationResource->save($callbackOperation);
         } catch (Throwable $e) {
             throw new CouldNotSaveException(
-                __('Could not save CallbackOperation'),
-                $e
+                __('Could not save CallbackOperation: %1', $e->getMessage()),
+                null
             );
         }
 
@@ -143,10 +143,11 @@ class CallbackOperationRepository implements CallbackOperationRepositoryInterfac
         } catch (Throwable $e) {
             throw new LocalizedException(
                 __(
-                    'Cannot delete callbackOperation with id %1',
-                    $callbackOperation->getId()
+                    'Cannot delete callbackOperation with id %1: %2',
+                    $callbackOperation->getId(),
+                    $e->getMessage()
                 ),
-                $e
+                null
             );
         }
 

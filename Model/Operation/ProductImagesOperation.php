@@ -221,7 +221,7 @@ class ProductImagesOperation implements ImagesInterface
                 $imagePayload = $this->downloader->getRemoteFileContent($newImage->getUrl());
             } catch (Throwable $exception) {
                 throw new LocalizedException(
-                    __('Cannot download image %1', $newImage->getFilename()),
+                    __('Cannot download image %1: %2', $newImage->getFilename(), $exception->getMessage()),
                     null,
                     ErrorCodesDirectory::CANNOT_DOWNLOAD_MEDIA_FILE
                 );
@@ -231,7 +231,7 @@ class ProductImagesOperation implements ImagesInterface
                 $imagePayload = $this->getLocalImage($existingImage->getValueId());
             } catch (Throwable $exception) {
                 throw new LocalizedException(
-                    __('Cannot read local image %1', $newImage->getFilename()),
+                    __('Cannot read local image %1: %2', $newImage->getFilename(), $exception->getMessage()),
                     null,
                     ErrorCodesDirectory::CANNOT_READ_LOCAL_MEDIA_FILE
                 );

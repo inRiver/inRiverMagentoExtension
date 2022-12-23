@@ -124,8 +124,8 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
             $productRepository->save($product);
         } catch (Throwable $exception) {
             throw new LocalizedException(
-                __('Cannot save product %1 categories', $sku),
-                $exception,
+                __('Cannot save product %1 categories: %2', $sku, $exception->getMessage()),
+                null,
                 ErrorCodesDirectory::CANNOT_NOT_SAVE_PRODUCT_CATEGORIES
             );
         }

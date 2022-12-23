@@ -67,7 +67,9 @@ class OptionManagementExtended extends OptionManagement
             /** @noinspection PhpParamsInspection */
             $this->resourceModel->save($attribute);
         } catch (Throwable $e) {
-            throw new StateException(__('The "%1" attribute can\'t be saved.', $attributeCode));
+            throw new StateException(
+                __('The "%1" attribute can\'t be saved: %2', $attributeCode, $e->getMessage())
+            );
         }
     }
 }

@@ -99,7 +99,7 @@ class FileDownloader
             );
         } catch (Throwable $e) {
             throw new LocalizedException(
-                __('Cannot download file from %1', $url),
+                __('Cannot download file from %1: %2', $url, $e->getMessage()),
                 null,
                 ErrorCodesDirectory::CANNOT_DOWNLOAD_CSV_FILE
             );
