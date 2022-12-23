@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -24,7 +24,6 @@ use Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterface;
 use Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterfaceFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ProductRepository;
-use Magento\CatalogInventory\Model\StockRegistryStorage;
 use Magento\Framework\Api\Data\ImageContentInterfaceFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
@@ -73,9 +72,6 @@ class ProductImagesOperation implements ImagesInterface
     /** @var \Inriver\Adapter\Model\MediaGallery\MediaGalleryManagement */
     protected $mediaGalleryManagement;
 
-    /** @var \Magento\CatalogInventory\Model\StockRegistryStorage */
-    private $stockRegistryStorage;
-
     /** @var \Inriver\Adapter\Logger\Logger */
     private $logger;
 
@@ -89,7 +85,6 @@ class ProductImagesOperation implements ImagesInterface
      * @param \Inriver\Adapter\Api\InriverMediaGalleryDataRepositoryInterface $inriverMediaGalleryDataRepository
      * @param \Inriver\Adapter\Model\Data\InriverMediaGalleryDataFactory $inriverMediaGalleryDataFactory
      * @param \Inriver\Adapter\Model\MediaGallery\MediaGalleryManagement $mediaGalleryManagement
-     * @param \Magento\CatalogInventory\Model\StockRegistryStorage $stockRegistryStorage
      * @param \Inriver\Adapter\Logger\Logger $logger
      */
     public function __construct(
@@ -102,7 +97,6 @@ class ProductImagesOperation implements ImagesInterface
         InriverMediaGalleryDataRepositoryInterface $inriverMediaGalleryDataRepository,
         InriverMediaGalleryDataFactory $inriverMediaGalleryDataFactory,
         MediaGalleryManagement $mediaGalleryManagement,
-        StockRegistryStorage $stockRegistryStorage,
         Logger $logger
     ) {
         $this->downloader = $downloader;
@@ -114,7 +108,6 @@ class ProductImagesOperation implements ImagesInterface
         $this->inriverMediaGalleryDataRepository = $inriverMediaGalleryDataRepository;
         $this->inriverMediaGalleryDataFactory = $inriverMediaGalleryDataFactory;
         $this->mediaGalleryManagement = $mediaGalleryManagement;
-        $this->stockRegistryStorage = $stockRegistryStorage;
         $this->logger = $logger;
     }
 
@@ -123,7 +116,7 @@ class ProductImagesOperation implements ImagesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface $productImage
      *
-     * @return string[]
+     * @return array
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -133,11 +126,11 @@ class ProductImagesOperation implements ImagesInterface
      */
     public function post(ProductImagesInterface $productImage): array
     {
-        $this->logger->info(
+        $this->logger->addInfo(
             __('Starting Product Images Operation for sku: %1', $productImage->getSku())
         );
-        $result = $this->syncProductImages($productImage->getSku(), $productImage->getImages());
-        $this->logger->info(
+        $result =  $this->syncProductImages($productImage->getSku(), $productImage->getImages());
+        $this->logger->addInfo(
             __('Finished Product Images Operation for sku: %1', $productImage->getSku())
         );
         return $result;
@@ -149,18 +142,13 @@ class ProductImagesOperation implements ImagesInterface
      * @param string $sku
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface[] $images
      *
-     * @return string[]
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\StateException
-     * @throws \Magento\Framework\Exception\InputException|\Magento\Framework\Exception\LocalizedException
      */
     private function syncProductImages(string $sku, array $images): array
     {
         $this->storeManager->setCurrentStore(0);
-
-        // Clean both stock registry and product repository cache to force a reload.
-        // This Fixes a rare bug if another extension loaded wrong data in them.
-        $this->stockRegistryStorage->clean();
         $this->productRepository->cleanCache();
 
         $newImagesByImageId = $this->imagesByImageId($images);
@@ -198,11 +186,7 @@ class ProductImagesOperation implements ImagesInterface
             try {
                 $this->createNewMediaEntry($newImage, $sku);
             } catch (LocalizedException $ex) {
-                $errors[] = [
-                    'error_code' => $ex->getCode() ? $ex->getCode() : ErrorCodesDirectory::CANNOT_DOWNLOAD_MEDIA_FILE,
-                    'error_message' => 'There was an error with image ' . $newImage->getFilename() .
-                        ' for sku ' . $sku . ': ' . $ex->getMessage(),
-                ];
+                $errors[] = ['error_code' => $ex->getCode(), 'error_message' => $ex->getMessage()];
             }
         }
 
@@ -233,10 +217,9 @@ class ProductImagesOperation implements ImagesInterface
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface $newImage
      * @param string $sku
      *
-     * @throws \Magento\Framework\Exception\FileSystemException
-     * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\StateException
      */
     private function createNewMediaEntry(ImageInterface $newImage, string $sku): void
@@ -316,8 +299,8 @@ class ProductImagesOperation implements ImagesInterface
      * @param string $sku
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface $newImage
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function updateStoreValues(
         ProductAttributeMediaGalleryEntryInterface $entry,
@@ -384,8 +367,8 @@ class ProductImagesOperation implements ImagesInterface
     /**
      * Test if image types are equal
      *
-     * @param string[] $currentTypes
-     * @param string[] $requiredTypes
+     * @param array $currentTypes
+     * @param array $requiredTypes
      *
      * @return bool
      */

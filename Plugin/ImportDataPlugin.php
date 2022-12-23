@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -77,11 +77,11 @@ class ImportDataPlugin
         try {
             return $proceed($code);
         } /** @noinspection PhpRedundantCatchClauseInspection */ catch (LocalizedException $ex) {
-            throw new EmptyImportException(
-                __($ex->getMessage()),
-                $ex,
-                $ex->getCode()
-            );
+                throw new EmptyImportException(
+                    __($ex->getMessage()),
+                    $ex,
+                    $ex->getCode()
+                );
         }
     }
 

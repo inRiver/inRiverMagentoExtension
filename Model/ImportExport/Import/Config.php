@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  * This file applies minor modifications to native Magento code.
@@ -19,4 +19,5 @@ use Magento\ImportExport\Model\Import\Config as ParentConfig;
  */
 class Config extends ParentConfig
 {
+
 }

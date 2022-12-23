@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @author    InRiver <inriveradapters@inriver.com>
+ * @author    InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link      https://www.inriver.com/
  */
@@ -20,12 +20,6 @@
             <resource ref="Inriver_Adapter::read"/>
         </resources>
     </route>
-    <route method="GET" url="/V1/inriver-adapter/attribute-list">
-        <service class="Inriver\Adapter\Api\AttributeInterface" method="get"/>
-        <resources>
-            <resource ref="Inriver_Adapter::read"/>
-        </resources>
-    </route>
     <route method="GET" url="/V1/inriver-adapter/error-codes">
         <service class="Inriver\Adapter\Api\ErrorCodesInterface" method="get"/>
         <resources>
@@ -39,7 +33,7 @@
         </resources>
     </route>
     <route method="POST" url="/V1/inriver-adapter/products/import/relations">
-        <service class="Inriver\Adapter\Api\ProductsImportRelationsInterface" method="post"/>
+        <service class="Inriver\Adapter\Model\Operation\CsvProductRelationsImportByUrlOperation" method="post"/>
         <resources>
             <resource ref="Inriver_Adapter::write"/>
         </resources>
@@ -62,22 +56,10 @@
             <resource ref="Inriver_Adapter::write"/>
         </resources>
     </route>
-    <route method="POST" url="/V1/inriver-adapter/products/delete-category-assignments">
-        <service class="Inriver\Adapter\Api\ProductCategoriesInterface" method="delete"/>
-        <resources>
-            <resource ref="Inriver_Adapter::write"/>
-        </resources>
-    </route>
     <route method="GET" url="/V1/inriver-adapter/allskuswithtype">
         <service class="Inriver\Adapter\Api\SkusListInterface" method="getAllSkusWithType"/>
         <resources>
             <resource ref="Inriver_Adapter::read"/>
-        </resources>
-    </route>
-    <route method="PUT" url="/V1/inriver-adapter/categories/:categoryId/move">
-        <service class="Inriver\Adapter\Api\CategoryManagementInterface" method="move"/>
-        <resources>
-            <resource ref="Inriver_Adapter::write"/>
         </resources>
     </route>
 </routes>

@@ -8,7 +8,6 @@
                 <path_csv>inriver/import/csv</path_csv>
                 <inriver_api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <maximum_allowed_error>99999</maximum_allowed_error>
-                <cleanup_days>30</cleanup_days>
             </import>
         </inriver>
     </default>

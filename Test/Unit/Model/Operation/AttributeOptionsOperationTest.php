@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -65,6 +65,7 @@ class AttributeOptionsOperationTest extends TestCase
 
     /** @var \Magento\Swatches\Helper\Data|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $swatchHelper;
+
 
     /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection|\Inriver\Adapter\Test\Unit\Model\Operation\MockObject */
     private $collection;

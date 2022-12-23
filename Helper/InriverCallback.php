@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -100,9 +100,9 @@ class InriverCallback
         ?string $message = null,
         $resultData = null
     ): void {
+        $callbackOperation = $this->callbackOperationRepository->getByOperationId($operationId);
+
         try {
-            //No operation are created for call that don't have the callback header
-            $callbackOperation = $this->callbackOperationRepository->getByOperationId($operationId);
             $callback = $this->callbackRepository->getByBulkUuid($bulkUuid);
         } catch (NoSuchEntityException $e) {
             // No callback to handle
@@ -154,7 +154,8 @@ class InriverCallback
                 } catch (Exception $e) {
                     $empty = false;
                     $messageArray['additional_messages'] = [
-                        'Message' => 'An error occured while deserializing $resultData, see Magento log for more information',
+                        'Message' =>
+                            'An error occured while deserializing $resultData, see Magento log for more information',
                         'Exception' => $e->getMessage()
                     ];
                     $this->logger->log(
@@ -200,10 +201,7 @@ class InriverCallback
             if ($callbackId !== null) {
                 $callbackOperations = $this->callbackOperationRepository->getListByCallbackId($callbackId)->getItems();
 
-                $countOperation = count($callbackOperations);
-                $totalOperation = $callback->getNumberOfOperations();
-                $this->logger->info("Operation Count $countOperation vs $totalOperation");
-                if ($countOperation === $totalOperation) {
+                if (count($callbackOperations) === $callback->getNumberOfOperations()) {
                     $response = $this->sendResponse(
                         $apiKey,
                         $callback->getCallBackUrl(),

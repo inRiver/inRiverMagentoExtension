@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -20,20 +20,9 @@ interface ProductCategoriesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories
      *
-     * @return string[]
+     * @return array
      *
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
     public function post(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array;
-
-    /**
-     * Import product categories
-     *
-     * @param \Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories
-     *
-     * @return string[]
-     *
-     * @noinspection PhpFullyQualifiedNameUsageInspection
-     */
-    public function delete(\Inriver\Adapter\Api\Data\ProductCategoriesInterface $productCategories): array;
 }

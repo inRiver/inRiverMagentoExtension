@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -169,18 +169,18 @@ class InriverProductImportPluginTest extends TestCase
         $this->importHelper
             ->method('decodeImportAttributeValue')->willReturn('abc%');
 
-        $return = $inriverProductImportPlugin->afterParseMultiselectValues(
-            $this->productImport,
-            ['attr1' => 'abc%25', 'attr2' => 'abc%25']
-        );
-        $this->assertEquals(
-            'abc%',
-            $return['attr1']
-        );
-        $this->assertEquals(
-            'abc%',
-            $return['attr2']
-        );
+            $return = $inriverProductImportPlugin->afterParseMultiselectValues(
+                $this->productImport,
+                ['attr1' => 'abc%25', 'attr2' => 'abc%25']
+            );
+            $this->assertEquals(
+                'abc%',
+                $return['attr1']
+            );
+            $this->assertEquals(
+                'abc%',
+                $return['attr2']
+            );
     }
 
     public function testParseMultipleIsString(): void

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -22,7 +22,7 @@ interface ImagesInterface
      *
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface $productImage
      *
-     * @return string[]
+     * @return array
      *
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */

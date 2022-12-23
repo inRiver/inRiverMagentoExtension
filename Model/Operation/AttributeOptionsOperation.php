@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -14,8 +14,8 @@ use Inriver\Adapter\Api\AttributeOptionsInterface;
 use Inriver\Adapter\Api\Data\OptionsByAttributeInterface;
 use Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
-use Inriver\Adapter\Logger\Logger;
 use Inriver\Adapter\Model\Entity\Attribute\OptionManagementExtended;
+use Inriver\Adapter\Logger\Logger;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Api\AttributeRepositoryInterface;
@@ -136,12 +136,12 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
      */
     public function post(OptionsByAttributeInterface $optionsByAttribute): void
     {
-        $this->logger->info(__('Starting Attribute options Operation'));
+        $this->logger->addInfo(__('Starting Attribute options Operation'));
         foreach ($optionsByAttribute->getAttributes() as $attribute) {
-            $this->logger->info(__('Importing options for Attributes: %1', $attribute));
+            $this->logger->addInfo(__('Importing options for Attributes: %1', $attribute));
             $this->processAttribute($attribute, $optionsByAttribute->getOptions(), Product::ENTITY);
         }
-        $this->logger->info(__('Finished Attribute options Operation'));
+        $this->logger->addInfo(__('Finished Attribute options Operation'));
     }
 
     /**
@@ -231,6 +231,7 @@ class AttributeOptionsOperation implements AttributeOptionsInterface
         AttributeOption $currentOption,
         OptionInterface $updatedOption
     ): void {
+
         $isSwatch = $this->swatchHelper->isSwatchAttribute($attribute);
         $labels = $this->getStoreLabels($updatedOption, $isSwatch, $currentOption, $attribute);
 

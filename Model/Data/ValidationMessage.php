@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author InRiver <inriveradapters@inriver.com>
+ * @author InRiver <iif-magento@inriver.com>
  * @copyright Copyright (c) InRiver (https://www.inriver.com/)
  * @link https://www.inriver.com/
  */
@@ -10,7 +10,10 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Model\Data;
 
+use Inriver\Adapter\Api\Data\AppVersionsInterface;
 use Inriver\Adapter\Api\Data\ValidationMessageInterface;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Module\ModuleListInterface;
 
 /**
  * Class AppVersions
