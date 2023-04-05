@@ -286,7 +286,7 @@ class ProductImagesOperation implements ImagesInterface
 
         $this->inriverMediaGalleryDataRepository->save($inriverMediaGalleryData);
 
-        $this->updateStoreValues($newEntry, $sku, $newImage);
+        $this->updateStoreValues($newEntry, $sku, $newImage, true);
     }
 
     /**
@@ -312,6 +312,7 @@ class ProductImagesOperation implements ImagesInterface
      * @param \Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterface $entry
      * @param string $sku
      * @param \Inriver\Adapter\Api\Data\ProductImagesInterface\ImageInterface $newImage
+     * @param bool $newlyAddedImage
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -319,7 +320,8 @@ class ProductImagesOperation implements ImagesInterface
     private function updateStoreValues(
         ProductAttributeMediaGalleryEntryInterface $entry,
         string $sku,
-        ImageInterface $newImage
+        ImageInterface $newImage,
+        bool $newlyAddedImage = false
     ): void {
         $entry->setFile(null);
         $entry->setContent(null);
@@ -348,7 +350,7 @@ class ProductImagesOperation implements ImagesInterface
 
                 $roles = array_flip($storesAttributes->getRoles());
 
-                if (!$this->imageTypesAreEqual($storeEntry->getTypes(), $storesAttributes->getRoles())) {
+                if ($newlyAddedImage || !$this->imageTypesAreEqual($storeEntry->getTypes(), $storesAttributes->getRoles())) {
                     $this->mediaGalleryManagement->updateImageTypes($roles, $value, $product, $storeId);
                 }
             }

@@ -1,3 +1,6 @@
+##Version 24.7.1
+- Fix bug with image roles on first call
+
 ##Version 24.7.0
 - Added new endpoint for the 1.9.0 version of the inRiver Adapter
 - Fixes issue for newly created categories where url_path and url_rewrites are not correctly generated via Magento's bulk API
