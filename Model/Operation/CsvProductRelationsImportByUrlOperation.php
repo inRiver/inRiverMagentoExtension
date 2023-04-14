@@ -13,6 +13,7 @@ namespace Inriver\Adapter\Model\Operation;
 use Inriver\Adapter\Api\ProductsImportRelationsInterface;
 use Inriver\Adapter\Helper\FileDownloader;
 use Inriver\Adapter\Helper\FileEncoding;
+use Inriver\Adapter\Helper\Import as InriverImportHelper;
 use Inriver\Adapter\Model\Data\ImportFactory;
 use Inriver\Adapter\Model\Data\ImportProductRelationsFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -67,6 +68,7 @@ class CsvProductRelationsImportByUrlOperation extends CsvImportByUrlOperation im
         /** @var \Inriver\Adapter\Model\Data\ImportProductRelations $import */
         $import = $this->importProductRelationsFactory->create();
         $import->setManagedWebsites($managedWebsiteIds);
+        $import->setInriverImportType(InriverImportHelper::INRIVER_IMPORT_TYPE_RELATIONS);
         $import->execute($path);
         return $import->getErrorsAsArray();
     }

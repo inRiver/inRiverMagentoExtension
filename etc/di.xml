@@ -55,6 +55,8 @@
 
     <preference for="Magento\BundleImportExport\Model\Import\Product\Type\Bundle" type="Inriver\Adapter\Model\Import\Product\Type\Bundle" />
 
+    <preference for="Magento\CatalogUrlRewrite\Observer\AfterImportDataObserver" type="Inriver\Adapter\Observer\AfterImportDataObserver" />
+
     <type name="Inriver\Adapter\Model\ImportExport\Import">
         <plugin name="use_inriver_import_data" type="Inriver\Adapter\Plugin\UseInriverImportDataPlugin"/>
     </type>

@@ -16,6 +16,7 @@ use Inriver\Adapter\Api\ProductsImportInterface;
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Helper\FileDownloader;
 use Inriver\Adapter\Helper\FileEncoding;
+use Inriver\Adapter\Helper\Import as InriverImportHelper;
 use Inriver\Adapter\Model\Data\ImportFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -150,6 +151,7 @@ class CsvImportByUrlOperation implements ProductsImportInterface
     {
         $import = $this->importFactory->create();
         $import->setManagedWebsites($managedWebsiteIds);
+        $import->setInriverImportType(InriverImportHelper::INRIVER_IMPORT_TYPE_PRODUCTS);
         $import->execute($path);
 
         return $import->getErrorsAsArray();

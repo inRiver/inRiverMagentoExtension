@@ -396,4 +396,14 @@ class Import implements ImportInterface
     {
         return $this->managedWebsites;
     }
+
+    /**
+     * Set the Inriver Import Type
+     *
+     * @param string $inriverImportType
+     */
+    public function setInriverImportType(string $inriverImportType)
+    {
+        $this->getImportModel()->setData('inriver_import_type', $inriverImportType);
+    }
 }

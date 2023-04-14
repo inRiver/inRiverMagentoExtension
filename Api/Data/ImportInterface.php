@@ -70,4 +70,11 @@ interface ImportInterface
      * @return string
      */
     public function getManagedWebsites(): string;
+
+    /**
+     * Set the Inriver Import Type
+     *
+     * @param string $inriverImportType
+     */
+    public function setInriverImportType(string $inriverImportType);
 }

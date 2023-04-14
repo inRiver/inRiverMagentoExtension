@@ -1,3 +1,7 @@
+##Version 24.7.2
+- Fix url rewrites after import relations
+- Fix api request categories completed for Magento Open Source
+
 ##Version 24.7.1
 - Fix bug with image roles on first call
 
