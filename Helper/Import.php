@@ -25,6 +25,9 @@ class Import
     public const INRIVER_ENTITY = 'inriver_product';
     public const IS_INRIVER_IMPORT = 'is_inriver_import';
 
+    public const INRIVER_IMPORT_TYPE_PRODUCTS = 'import_type_products';
+    public const INRIVER_IMPORT_TYPE_RELATIONS = 'import_type_relations';
+
     public const LIST_OF_CHARACTER_TO_DECODE_AND_ENCODE_FOR_IMPORT = [
         'search' => ['%3D', '%2C', '%22', '%7C', '%25', '%0A', '%0D'],
         'replace' => ['=', ',', '"', '|', '%', "\n", "\r"],

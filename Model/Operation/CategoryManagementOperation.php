@@ -13,12 +13,15 @@ namespace Inriver\Adapter\Model\Operation;
 use Exception;
 use Inriver\Adapter\Api\CategoryManagementInterface;
 use Inriver\Adapter\Logger\Logger;
+use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\CategoryRepository;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
-use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
 use Magento\CatalogUrlRewrite\Model\Category\ChildrenCategoriesProvider;
-use Magento\Framework\Event\ManagerInterface;
+use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
 
@@ -40,22 +43,38 @@ class CategoryManagementOperation implements CategoryManagementInterface
     /** @var \Inriver\Adapter\Logger\Logger  */
     private $logger;
 
+    /** @var \Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator  */
     private CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator;
 
+    /** @var \Magento\UrlRewrite\Model\UrlPersistInterface  */
     private UrlPersistInterface $urlPersist;
 
+    /** @var \Magento\Store\Model\StoreManagerInterface  */
     private StoreManagerInterface $storeManager;
 
+    /** @var \Magento\Framework\App\ResourceConnection  */
     private ResourceConnection $resourceConnection;
 
+    /** @var \Magento\CatalogUrlRewrite\Model\Category\ChildrenCategoriesProvider  */
     private ChildrenCategoriesProvider $childrenCategoriesProvider;
 
+    /** @var \Magento\Framework\EntityManager\EntityMetadata */
+    protected $categoryMetadata;
+
     /**
+     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
      * @param \Magento\Catalog\Model\CategoryRepository $categoryRepository
+     * @param \Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Inriver\Adapter\Logger\Logger $logger
+     * @param \Magento\UrlRewrite\Model\UrlPersistInterface $urlPersist
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param \Magento\CatalogUrlRewrite\Model\Category\ChildrenCategoriesProvider $childrenCategoriesProvider
+     * @param MetadataPool|null $metadataPool
      */
     public function __construct(
-        CategoryCollectionFactory   $categoryCollectionFactory,
+        CategoryCollectionFactory $categoryCollectionFactory,
         CategoryRepository $categoryRepository,
         CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
         ManagerInterface $eventManager,
@@ -63,7 +82,8 @@ class CategoryManagementOperation implements CategoryManagementInterface
         UrlPersistInterface $urlPersist,
         StoreManagerInterface $storeManager,
         ResourceConnection $resourceConnection,
-        ChildrenCategoriesProvider $childrenCategoriesProvider
+        ChildrenCategoriesProvider $childrenCategoriesProvider,
+        MetadataPool $metadataPool = null
     ) {
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->categoryRepository = $categoryRepository;
@@ -74,6 +94,8 @@ class CategoryManagementOperation implements CategoryManagementInterface
         $this->resourceConnection = $resourceConnection;
         $this->storeManager = $storeManager;
         $this->urlPersist = $urlPersist;
+        $metadataPool = $metadataPool ?? ObjectManager::getInstance()->get(MetadataPool::class);
+        $this->categoryMetadata = $metadataPool->getMetadata(CategoryInterface::class);
     }
 
     /**
@@ -133,6 +155,8 @@ class CategoryManagementOperation implements CategoryManagementInterface
         // for specified cat ids and their children
         $connection = $this->resourceConnection->getConnection();
 
+        $linkField = $this->categoryMetadata->getLinkField();
+
         $categories = $this->categoryCollectionFactory->create()
             ->addAttributeToFilter('entity_id', ['in' => $categoryIds])
             ->addAttributeToFilter('level', ['gt' => 1]);
@@ -149,12 +173,14 @@ class CategoryManagementOperation implements CategoryManagementInterface
                     'ea.attribute_id = ev.attribute_id'
                 )->join(
                     ['e' => $connection->getTableName('catalog_category_entity')],
-                    'e.row_id = ev.row_id'
+                    'e.' . $linkField . ' = ev.' . $linkField
                 )
                 ->where(
-                    'ea.attribute_code = ?','url_path'
+                    'ea.attribute_code = ?',
+                    'url_path'
                 )->where(
-                    'e.entity_id IN (?)', $childIds
+                    'e.entity_id IN (?)',
+                    $childIds
                 );
             $connection->query($select->deleteFromSelect('ev'));
         }
@@ -174,7 +200,7 @@ class CategoryManagementOperation implements CategoryManagementInterface
                     [$category->getId()]
                 );
                 // Delete all url rewrites
-                foreach($childIds as $childId) {
+                foreach ($childIds as $childId) {
                     $this->urlPersist->deleteByData(
                         [
                             UrlRewrite::ENTITY_ID => $childId,

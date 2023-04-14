@@ -69,24 +69,26 @@ class Cleanup
      */
     public function cleanFolder(string $folderPath)
     {
-        $now = time();
-        $daysConfig = (int)$this->scopeConfig->getValue(Import::XML_INRIVER_IMPORT_CLEANUP_DAYS);
-        $daysInTimestamp = 60 * 60 * 24 * $daysConfig;
+        if ($this->driverFile->isExists($folderPath)) {
+            $now = time();
+            $daysConfig = (int)$this->scopeConfig->getValue(Import::XML_INRIVER_IMPORT_CLEANUP_DAYS);
+            $daysInTimestamp = 60 * 60 * 24 * $daysConfig;
 
-        try {
-            $paths = $this->driverFile->readDirectory($folderPath);
-            foreach ($paths as $filepath) {
-                try {
-                    $stats = $this->driverFile->stat($filepath);
-                    if (array_key_exists('mtime', $stats) && $now - $stats['mtime'] >= $daysInTimestamp) {
-                        $this->driverFile->deleteFile($filepath);
+            try {
+                $paths = $this->driverFile->readDirectory($folderPath);
+                foreach ($paths as $filepath) {
+                    try {
+                        $stats = $this->driverFile->stat($filepath);
+                        if (array_key_exists('mtime', $stats) && $now - $stats['mtime'] >= $daysInTimestamp) {
+                            $this->driverFile->deleteFile($filepath);
+                        }
+                    } catch (\Exception $ex) {
+                        $this->logger->error("Cannot delete file $filepath during cleanup : " . $ex->getMessage());
                     }
-                } catch (\Exception $ex) {
-                    $this->logger->error("Cannot delete file $filepath during cleanup : " . $ex->getMessage());
                 }
+            } catch (\Exception $ex) {
+                $this->logger->error("Cannot read directory $folderPath during cleanup : " . $ex->getMessage());
             }
-        } catch (\Exception $ex) {
-            $this->logger->error("Cannot read directory $folderPath during cleanup : " . $ex->getMessage());
         }
     }
 }
