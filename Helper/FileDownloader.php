@@ -75,7 +75,6 @@ class FileDownloader
         $this->fileDriver = $fileDriver;
         $this->scopeConfig = $scopeConfig;
         $this->logger = $logger;
-
     }
 
     /**
@@ -136,7 +135,6 @@ class FileDownloader
             }
             break;
         } while ($attempts <= $maxAttempt);
-
 
         return $written;
     }
@@ -201,19 +199,23 @@ class FileDownloader
         return $this->directory->create($this->fileDriver->getParentDirectory($destination));
     }
 
-    public function getMaxAttempt() {
+    public function getMaxAttempt()
+    {
         return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_MAX_ALLOWED_ERROR);
     }
 
-    public function getAttemptSleep() {
+    public function getAttemptSleep()
+    {
         return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_INITIAL_DOWNLOAD_RETRY_SLEEP);
     }
 
-    public function getMaxAttemptImages() {
+    public function getMaxAttemptImages()
+    {
         return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_MAX_DOWNLOAD_IMAGES_RETRY_ATTEMPT);
     }
 
-    public function getAttemptSleepImages() {
+    public function getAttemptSleepImages()
+    {
         return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_INITIAL_DOWNLOAD_IMAGES_RETRY_SLEEP);
     }
 }

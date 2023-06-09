@@ -14,10 +14,6 @@
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="behavior" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Behavior</label>
-                    <source_model>Inriver\Adapter\Model\Config\Source\Behavior</source_model>
-                </field>
                 <field id="inriver_api_key" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>inRiver api key</label>
                     <comment>Key used to connect to the inRiver api</comment>
