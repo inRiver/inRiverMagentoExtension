@@ -52,7 +52,7 @@ class InriverProductImportPlugin
         if ($this->inriverImportHelper->isNewProductRowWithNoPrice($rowData) && $subject->isImportTypeDisable() === false) {
             $rowData['price'] = 0.00;
 
-            if(!array_key_exists(Import::COL_STATUS, $rowData)) {
+            if (!array_key_exists(Import::COL_STATUS, $rowData)) {
                 $rowData[Import::COL_STATUS] = Status::STATUS_DISABLED;
             }
         }

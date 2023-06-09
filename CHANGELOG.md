@@ -1,3 +1,6 @@
+##Version 24.8.0
+- Adaptation to the code to work on Magento 2.4.6 version
+
 ##Version 24.7.2
 - Fix url rewrites after import relations
 - Fix api request categories completed for Magento Open Source

@@ -200,6 +200,7 @@ class ProductImagesOperation implements ImagesInterface
                     'error_message' => 'There was an error with image ' . $newImage->getFilename() .
                         ' for sku ' . $sku . ': ' . $ex->getMessage(),
                 ];
+                $this->logger->error($ex);
             }
         }
 

@@ -177,6 +177,7 @@ class ProductCategoriesOperation implements ProductCategoriesInterface
                 'error_code' => ErrorCodesDirectory::CATEGORY_DOES_NOT_EXIST,
                 'error_message' => $category->getCategoryUniqueId(),
             ];
+            $this->logger->error(__('The category %1 does not exist.', $category->getCategoryUniqueId()));
         }
 
         return $errors;
