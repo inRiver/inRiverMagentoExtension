@@ -46,7 +46,7 @@ class ImportDataPlugin
     }
 
     /**
-     * Plugin for getNextBunch
+     * Plugin for getNextUniqueBunch
      *
      * @param \Inriver\Adapter\Model\ResourceModel\Import\Data $subject
      * @param string[]|null $result

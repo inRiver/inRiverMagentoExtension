@@ -109,8 +109,8 @@ class FileDownloader
         }
 
         $attempts = 1;
-        $retryAfter = $this->getAttemptSleep();
-        $maxAttempt = $this->getMaxAttempt();
+        $retryAfter = (int) $this->getAttemptSleep();
+        $maxAttempt = (int) $this->getMaxAttempt();
         do {
             try {
                 $written = $this->directory->writeFile(
@@ -160,8 +160,8 @@ class FileDownloader
         $normalizedUrl = str_replace($matches[0], '', $url);
 
         $attempts = 1;
-        $retryAfter = $this->getAttemptSleepImages();
-        $maxAttempt = $this->getMaxAttemptImages();
+        $retryAfter = (int) $this->getAttemptSleepImages();
+        $maxAttempt = (int) $this->getMaxAttemptImages();
         $data = '';
         do {
             try {
@@ -201,7 +201,7 @@ class FileDownloader
 
     public function getMaxAttempt()
     {
-        return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_MAX_ALLOWED_ERROR);
+        return $this->scopeConfig->getValue(ImportInterface::XML_INRIVER_MAX_DOWNLOAD_RETRY_ATTEMPT);
     }
 
     public function getAttemptSleep()
