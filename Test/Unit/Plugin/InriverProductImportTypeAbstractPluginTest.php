@@ -29,13 +29,13 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
     public function testIsNotInriver(): void
     {
         $inriverProductImportPlugin = new InriverProductImportTypeAbstractPlugin($this->inriverImportHelper);
+        $this->productImportTypeAbstract->{InriverImportHelper::IS_INRIVER_IMPORT} = false;
         $this->inriverImportHelper->expects($this->never())->method('decodeImportAttributeValue');
         $this->productImportTypeAbstract->expects($this->never())->method('retrieveAttribute');
 
-        $rowData = ['attr1' => 'abc%25', 'sku' => 'abc%25', InriverImportHelper::COL_IS_INRIVER_IMPORT => true];
         $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
             $this->productImportTypeAbstract,
-            $rowData,
+            ['attr1' => 'abc%25', 'sku' => 'abc%25'],
             true
         );
 
@@ -52,13 +52,13 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
     public function testNoAttributeSet(): void
     {
         $inriverProductImportPlugin = new InriverProductImportTypeAbstractPlugin($this->inriverImportHelper);
+        $this->productImportTypeAbstract->{InriverImportHelper::IS_INRIVER_IMPORT} = true;
         $this->inriverImportHelper->expects($this->never())->method('decodeImportAttributeValue');
         $this->productImportTypeAbstract->expects($this->never())->method('retrieveAttribute');
 
-        $rowData = ['attr1' => 'abc%25', 'sku' => 'abc%25', InriverImportHelper::COL_IS_INRIVER_IMPORT => true];
         $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
             $this->productImportTypeAbstract,
-            $rowData,
+            ['attr1' => 'abc%25', 'sku' => 'abc%25'],
             true
         );
 
@@ -75,13 +75,13 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
     public function testAttributeSetInvalid(): void
     {
         $inriverProductImportPlugin = new InriverProductImportTypeAbstractPlugin($this->inriverImportHelper);
+        $this->productImportTypeAbstract->{InriverImportHelper::IS_INRIVER_IMPORT} = true;
         $this->inriverImportHelper->expects($this->never())->method('decodeImportAttributeValue');
         $this->productImportTypeAbstract->expects($this->never())->method('retrieveAttribute');
 
-        $rowData = ['attr1' => 'abc%25', 'sku' => 'abc%25', Product::COL_ATTR_SET => null, InriverImportHelper::COL_IS_INRIVER_IMPORT => true];
         $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
             $this->productImportTypeAbstract,
-            $rowData,
+            ['attr1' => 'abc%25', 'sku' => 'abc%25', Product::COL_ATTR_SET => null],
             true
         );
 
@@ -113,14 +113,14 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
     public function testAttributeInNotToDecode(): void
     {
         $inriverProductImportPlugin = new InriverProductImportTypeAbstractPlugin($this->inriverImportHelper);
+        $this->productImportTypeAbstract->{InriverImportHelper::IS_INRIVER_IMPORT} = true;
         $this->inriverImportHelper->expects($this->never())->method('decodeImportAttributeValue');
         $this->productImportTypeAbstract->expects($this->never())->method('retrieveAttribute');
         $valueToNotDecode = InriverImportHelper::ATTRIBUTES_NOT_TO_DECODE;
         $attributeCode = array_pop($valueToNotDecode);
-        $rowData = [$attributeCode => 'abc%25', Product::COL_ATTR_SET => 'attrSet', InriverImportHelper::COL_IS_INRIVER_IMPORT => true];
         $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
             $this->productImportTypeAbstract,
-            $rowData,
+            [$attributeCode => 'abc%25', Product::COL_ATTR_SET => 'attrSet'],
             true
         );
 
@@ -133,6 +133,7 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
     public function testValidateAttributeThatFail(): void
     {
         $inriverProductImportPlugin = new InriverProductImportTypeAbstractPlugin($this->inriverImportHelper);
+        $this->productImportTypeAbstract->{InriverImportHelper::IS_INRIVER_IMPORT} = true;
         $this->inriverImportHelper->expects($this->never())->method('decodeImportAttributeValue');
         $typeToNotDecode = InriverImportHelper::ATTRIBUTES_NOT_TO_DECODE;
         $type = array_pop($typeToNotDecode);
@@ -152,22 +153,21 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
     public function testValidateAttributeThatWork(): void
     {
         $inriverProductImportPlugin = new InriverProductImportTypeAbstractPlugin($this->inriverImportHelper);
+        $this->productImportTypeAbstract->{InriverImportHelper::IS_INRIVER_IMPORT} = true;
         $this->inriverImportHelper->expects($this->exactly(2))
             ->method('decodeImportAttributeValue')->willReturn('abc%');
         $this->productImportTypeAbstract->method('retrieveAttribute')
             ->willReturn(['is_static' => false, 'type' => 'attrNotInList']);
 
-        $rowData = [
+        $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
+            $this->productImportTypeAbstract,
+            [
                'attr1' => 'abc%25',
                'attr2' => null, 'sku' => 'abc%25',
                Product::COL_ATTR_SET => 'attrSet',
                'attr3' => 'abc%',
                'attr4' => false,
-               InriverImportHelper::COL_IS_INRIVER_IMPORT => true
-        ];
-        $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
-            $this->productImportTypeAbstract,
-            $rowData,
+            ],
             true
         );
 
@@ -208,10 +208,9 @@ class InriverProductImportTypeAbstractPluginTest extends TestCase
         array $attribute
     ): void {
         $this->productImportTypeAbstract->method('retrieveAttribute')->willReturn($attribute);
-        $rowData = ['attr1' => 'abc%25', 'sku' => 'abc%25', Product::COL_ATTR_SET => 'attrSet', InriverImportHelper::COL_IS_INRIVER_IMPORT => true];
         $return = $inriverProductImportPlugin->beforePrepareAttributesWithDefaultValueForSave(
             $this->productImportTypeAbstract,
-            $rowData,
+            ['attr1' => 'abc%25', 'sku' => 'abc%25', Product::COL_ATTR_SET => 'attrSet'],
             true
         );
 

@@ -17,7 +17,6 @@ use Inriver\Adapter\Plugin\ImportDataPlugin;
 use Inriver\Adapter\Test\Unit\includes\MockInvokable;
 use Magento\Catalog\Model\Product\Type;
 use Magento\CatalogImportExport\Model\Import\Product;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use PHPUnit\Framework\TestCase;
 
@@ -42,9 +41,6 @@ class ImportDataPluginTest extends TestCase
     /** @var \Inriver\Adapter\Helper\Import|\Inriver\Adapter\Test\Unit\Plugin\MockObject */
     private $importHelper;
 
-    /** @var \Magento\Framework\App\Config\ScopeConfigInterface|\Inriver\Adapter\Test\Unit\Helper\MockObject */
-    private $scopeConfig;
-
     /** @var callable|\Inriver\Adapter\Test\Unit\Plugin\MockObject */
     private $proceed;
 
@@ -61,7 +57,7 @@ class ImportDataPluginTest extends TestCase
         $this->importHelper
             ->method('getUniqueProductUrl')->willReturn(self::RANDOM_URL);
 
-        $rowsData = $importDataPlugin->afterGetNextUniqueBunch($this->dataSourceModel, $this->getRowsData(), null);
+        $rowsData = $importDataPlugin->afterGetNextBunch($this->dataSourceModel, $this->getRowsData());
 
         foreach ($rowsData as $rowData) {
             if ($rowData[Product::COL_SKU] === self::NEW_SKU_WITH_STATUS_AND_URL) {
@@ -88,7 +84,7 @@ class ImportDataPluginTest extends TestCase
         $this->importHelper
             ->method('getUniqueProductUrl')->willReturn('');
 
-        $rowsData = $importDataPlugin->afterGetNextUniqueBunch($this->dataSourceModel, $this->getRowsData(), null);
+        $rowsData = $importDataPlugin->afterGetNextBunch($this->dataSourceModel, $this->getRowsData());
 
         foreach ($rowsData as $rowData) {
             if ($rowData[Product::COL_SKU] === self::NEW_SKU_WITH_STATUS_AND_URL) {
@@ -115,7 +111,7 @@ class ImportDataPluginTest extends TestCase
         $this->importHelper
             ->method('getUniqueProductUrl')->willReturn(self::RANDOM_URL);
 
-        $rowsData = $importDataPlugin->afterGetNextUniqueBunch($this->dataSourceModel, $this->getRowsData(), null);
+        $rowsData = $importDataPlugin->afterGetNextBunch($this->dataSourceModel, $this->getRowsData());
 
         foreach ($rowsData as $rowData) {
             if ($rowData[Product::COL_SKU] === self::NEW_SKU_WITH_STATUS_AND_URL) {
@@ -141,7 +137,8 @@ class ImportDataPluginTest extends TestCase
             ->method('isImportTypeDisable')->willReturn(false);
         $this->importHelper
             ->method('getUniqueProductUrl')->willReturn(self::RANDOM_URL);
-        $rowsData = $importDataPlugin->afterGetNextUniqueBunch($this->dataSourceModel, $this->getRowsData(), null);
+        $rowsData = $importDataPlugin->afterGetNextBunch($this->dataSourceModel, $this->getRowsData());
+
         foreach ($rowsData as $rowData) {
             $this->assertEquals(
                 2,
@@ -157,7 +154,7 @@ class ImportDataPluginTest extends TestCase
             ->method('isImportTypeDisable')->willReturn(true);
         $this->importHelper
             ->method('isNewSku')->willReturn(true);
-        $rowsData = $importDataPlugin->afterGetNextUniqueBunch($this->dataSourceModel, $this->getRowsData(), null);
+        $rowsData = $importDataPlugin->afterGetNextBunch($this->dataSourceModel, $this->getRowsData());
 
         foreach ($rowsData as $rowData) {
             if ($rowData[Product::COL_SKU] === self::NEW_SKU_WITH_STATUS_AND_URL) {
@@ -174,7 +171,7 @@ class ImportDataPluginTest extends TestCase
         }
     }
 
-    public function testThrowAroundGetUniqueColumnDataWithIds(): void
+    public function testThrowAroundGetUniqueColumnData(): void
     {
         $importDataPlugin = $this->getImportDataPlugin();
         $this->proceed->expects($this->once())->method('__invoke')->willThrowException(
@@ -182,7 +179,7 @@ class ImportDataPluginTest extends TestCase
         );
         $this->expectException(EmptyImportException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
-        $importDataPlugin->aroundGetUniqueColumnDataWithIds($this->dataSourceModel, $this->proceed, '0', null);
+        $importDataPlugin->aroundGetUniqueColumnData($this->dataSourceModel, $this->proceed, '0');
     }
 
     protected function setUp(): void
@@ -198,8 +195,6 @@ class ImportDataPluginTest extends TestCase
                     'getUniqueProductUrl',
                 ]
             );
-        $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
-        $this->scopeConfig->method('getValue')->willReturn(true);
         $this->proceed = $this->createPartialMock(MockInvokable::class, ['__invoke']);
     }
 
@@ -225,6 +220,6 @@ class ImportDataPluginTest extends TestCase
      */
     private function getImportDataPlugin(): ImportDataPlugin
     {
-        return new ImportDataPlugin($this->importHelper, $this->scopeConfig);
+        return new ImportDataPlugin($this->importHelper);
     }
 }

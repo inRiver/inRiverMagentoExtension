@@ -47,9 +47,9 @@ class InriverProductImportTypeAbstractPlugin
         array $rowData,
         bool $withDefaultValue
     ): array {
-        $isInriverImport = array_key_exists(InriverImportHelper::COL_IS_INRIVER_IMPORT, $rowData);
+        $isInriverImport = isset($subject->{InriverImportHelper::IS_INRIVER_IMPORT}) ?? false;
 
-        if ($isInriverImport && array_key_exists(Product::COL_ATTR_SET, $rowData)) {
+        if ($isInriverImport === true && array_key_exists(Product::COL_ATTR_SET, $rowData)) {
             $attributeSet = $rowData[Product::COL_ATTR_SET];
 
             if ($attributeSet !== null && $attributeSet !== '') {

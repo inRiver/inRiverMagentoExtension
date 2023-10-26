@@ -13,8 +13,6 @@ namespace Inriver\Adapter\Test\Unit\Helper;
 
 use Inriver\Adapter\Helper\ErrorCodesDirectory;
 use Inriver\Adapter\Helper\FileDownloader;
-use Inriver\Adapter\Logger\Logger;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
@@ -45,12 +43,6 @@ class FileDownloaderTest extends TestCase
 
     /** @var \Magento\Framework\Filesystem\Driver\File|\Inriver\Adapter\Test\Unit\Helper\MockObject */
     private $fileDriver;
-
-    /** @var \Magento\Framework\App\Config\ScopeConfigInterface|\Inriver\Adapter\Test\Unit\Helper\MockObject */
-    private $scopeConfig;
-
-    /** @var \Inriver\Adapter\Logger\Logger|\Inriver\Adapter\Test\Unit\Helper\MockObject */
-    private $logger;
 
     public function testCannotCreateDirectory(): void
     {
@@ -155,8 +147,6 @@ class FileDownloaderTest extends TestCase
         $this->readFactory = $this->createMock(ReadFactory::class);
         $this->file = $this->createMock(File::class);
         $this->fileDriver = $this->createMock(FileDriver::class);
-        $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
-        $this->logger = $this->createMock(Logger::class);
     }
 
     private function getSubject(): FileDownloader
@@ -165,9 +155,7 @@ class FileDownloaderTest extends TestCase
             $this->filesystem,
             $this->readFactory,
             $this->file,
-            $this->fileDriver,
-            $this->scopeConfig,
-            $this->logger
+            $this->fileDriver
         );
     }
 }

@@ -57,6 +57,12 @@
 
     <preference for="Magento\CatalogUrlRewrite\Observer\AfterImportDataObserver" type="Inriver\Adapter\Observer\AfterImportDataObserver" />
 
+    <virtualType name="Inriver\Adapter\Model\Import\Product\OptionFactory" type="Magento\CatalogImportExport\Model\Import\Product\OptionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Inriver\Adapter\Model\Import\Product\Option</argument>
+        </arguments>
+    </virtualType>
+
     <type name="Inriver\Adapter\Model\ImportExport\Import">
         <plugin name="use_inriver_import_data" type="Inriver\Adapter\Plugin\UseInriverImportDataPlugin"/>
     </type>
@@ -76,6 +82,13 @@
             <argument name="validator" xsi:type="object">Inriver\Adapter\Model\Import\Product\Validator</argument>
             <argument name="importConfig" xsi:type="object">Inriver\Adapter\Model\ImportExport\Import\Config</argument>
             <argument name="errorAggregator" xsi:type="object">Inriver\Adapter\Model\Import\ErrorProcessing\ProcessingErrorAggregator</argument>
+            <argument name="optionFactory" xsi:type="object">Inriver\Adapter\Model\Import\Product\OptionFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Inriver\Adapter\Model\Import\Product\Option">
+        <arguments>
+            <argument name="importData" xsi:type="object">Inriver\Adapter\Model\ResourceModel\Import\Data</argument>
         </arguments>
     </type>
 

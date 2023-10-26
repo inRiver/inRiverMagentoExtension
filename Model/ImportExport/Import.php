@@ -78,6 +78,7 @@ class Import extends ParentImport
                     // Restore original import entity and mark import as an Inriver Import
                     $this->setEntity(Product::ENTITY);
                     $this->setData(InriverImportHelper::IS_INRIVER_IMPORT, true);
+                    $this->_entityAdapter->setIsInriverImportForProductTypeModel();
 
                     // check for entity codes integrity
                     if ($this->getEntity() !== $this->_entityAdapter->getEntityTypeCode()) {

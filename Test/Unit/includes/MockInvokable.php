@@ -7,7 +7,6 @@
 declare(strict_types=1);
 
 namespace Inriver\Adapter\Test\Unit\includes;
-
 /**
  * Class MockInvokable.
  *

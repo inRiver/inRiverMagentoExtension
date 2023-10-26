@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Inriver\Adapter\Model\Import;
 
+use Inriver\Adapter\Helper\Import as InriverImportHelper;
 use Magento\CatalogImportExport\Model\Import\Product as ProductImport;
 use Magento\CatalogImportExport\Model\Import\Product\RowValidatorInterface as ValidatorInterface;
 use Magento\ImportExport\Model\Import;
@@ -83,6 +84,13 @@ class Product extends ProductImport
     {
         $this->isImportTypeDisable = $isImportTypeDisable;
         $this->isImportTypeConfirm = true;
+    }
+
+    public function setIsInriverImportForProductTypeModel(): void
+    {
+        foreach ($this->_productTypeModels as $model) {
+            $model->{InriverImportHelper::IS_INRIVER_IMPORT} = true;
+        }
     }
 
     /**
