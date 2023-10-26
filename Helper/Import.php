@@ -24,6 +24,7 @@ class Import
 {
     public const INRIVER_ENTITY = 'inriver_product';
     public const IS_INRIVER_IMPORT = 'is_inriver_import';
+    public const COL_IS_INRIVER_IMPORT = '_is_inriver_import';
 
     public const INRIVER_IMPORT_TYPE_PRODUCTS = 'import_type_products';
     public const INRIVER_IMPORT_TYPE_RELATIONS = 'import_type_relations';
@@ -50,6 +51,7 @@ class Import
         'small_image',
         'thumbnail',
         'swatch_image',
+        self::COL_IS_INRIVER_IMPORT,
     ];
 
     public const COL_STATUS = 'status';

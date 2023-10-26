@@ -1,6 +1,9 @@
-##Version 24.7.3
+##Version 24.8.1
 - Support Custom Options
 - Fix retry logic to the file and the image download
+
+##Version 24.8.0
+- Adaptation to the code to work on Magento 2.4.6 version
 
 ##Version 24.7.2
 - Fix url rewrites after import relations

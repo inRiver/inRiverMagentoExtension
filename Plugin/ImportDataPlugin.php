@@ -46,17 +46,18 @@ class ImportDataPlugin
     }
 
     /**
-     * Plugin for getNextBunch
+     * Plugin for getNextUniqueBunch
      *
      * @param \Inriver\Adapter\Model\ResourceModel\Import\Data $subject
      * @param string[]|null $result
+     * @param array|null $ids
      *
      * @return string[]|null
      *
      * @noinspection PhpUnusedParameterInspection
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function afterGetNextBunch(Data $subject, ?array $result): ?array
+    public function afterGetNextUniqueBunch(Data $subject, ?array $result, $ids = null): ?array
     {
         if ($result !== null) {
             $firstRow = reset($result);
@@ -73,6 +74,7 @@ class ImportDataPlugin
      * @param \Inriver\Adapter\Model\ResourceModel\Import\Data $subject
      * @param callable $proceed
      * @param string $code
+     * @param array $ids
      *
      * @return string
      * @throws \Inriver\Adapter\Exception\EmptyImportException
@@ -81,7 +83,7 @@ class ImportDataPlugin
      * @noinspection PhpUnusedParameterInspection
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function aroundGetUniqueColumnData(Data $subject, callable $proceed, string $code): string
+    public function aroundGetUniqueColumnDataWithIds(Data $subject, callable $proceed, string $code, $ids = null): string
     {
         try {
             return $proceed($code);
@@ -117,6 +119,8 @@ class ImportDataPlugin
                     $result[$rowKey][Product::URL_KEY] = $newUrl;
                 }
             }
+
+            $result[$rowKey][Import::COL_IS_INRIVER_IMPORT] = true;
         }
 
         return $result;
