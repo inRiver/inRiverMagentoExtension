@@ -86,7 +86,7 @@ class ImportDataPlugin
     public function aroundGetUniqueColumnDataWithIds(Data $subject, callable $proceed, string $code, $ids = null): string
     {
         try {
-            return $proceed($code);
+            return $proceed($code, $ids);
         } /** @noinspection PhpRedundantCatchClauseInspection */ catch (LocalizedException $ex) {
             throw new EmptyImportException(
                 __($ex->getMessage()),
