@@ -1,3 +1,6 @@
+##Version 24.8.2
+- Fix import issue in plugin
+
 ##Version 24.8.1
 - Support Custom Options
 - Fix retry logic to the file and the image download
