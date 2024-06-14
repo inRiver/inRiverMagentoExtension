@@ -37,7 +37,6 @@
     <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option"/>
     <preference for="Inriver\Adapter\Api\Data\OptionsByAttributeInterface\OptionInterface\ValuesInterface" type="Inriver\Adapter\Model\Data\OptionsByAttribute\Option\Values"/>
 
-
     <preference for="Inriver\Adapter\Api\AttributeInterface" type="Inriver\Adapter\Model\Attribute"/>
     <preference for="Inriver\Adapter\Api\Data\AttributeSetInterface" type="Inriver\Adapter\Model\Data\AttributeSet"/>
 
