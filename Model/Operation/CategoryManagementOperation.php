@@ -28,9 +28,6 @@ use Magento\UrlRewrite\Model\UrlPersistInterface;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 use function __;
 
-/**
- * Class ProductCategoriesOperation ProductCategoriesOperation
- */
 class CategoryManagementOperation implements CategoryManagementInterface
 {
     private CategoryCollectionFactory $categoryCollectionFactory;
@@ -117,12 +114,12 @@ class CategoryManagementOperation implements CategoryManagementInterface
 
         if ($parentCategory->hasChildren()) {
             $parentChildren = $parentCategory->getChildren();
-            $categoryIds = explode(',', $parentChildren);
+            $categoryIds = $parentChildren !== null ? explode(',', $parentChildren) : [];
             $lastId = array_pop($categoryIds);
             $afterId = ($afterId === null || $afterId > $lastId) ? $lastId : $afterId;
         }
-        $parentPath = $parentCategory->getPath();
-        $path = $model->getPath();
+        $parentPath = $parentCategory->getPath() ?? '';
+        $path = $model->getPath() . '/';
         if ($path && strpos($parentPath, $path) === 0) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('Operation do not allow to move a parent category to any of children category')

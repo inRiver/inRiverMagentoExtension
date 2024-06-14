@@ -1,3 +1,7 @@
+##Version 24.8.3
+- Adding PHP 8.3 support for Magento 2.4.7
+- Fix GitHub-32464
+
 ##Version 24.8.2
 - Fix import issue in plugin
 
